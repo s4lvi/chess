@@ -11,5 +11,5 @@ def index():
 @app.route("/move")
 def make_move(match_id, player, move):
     # get moves list
-    pastMoves = MongoService.get_match_moves(matchId)
+    pastMoves = MongoService.getMoves(matchId)
     return 
