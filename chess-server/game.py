@@ -1,4 +1,4 @@
-class ChessGame():
+class ChessGame:
 
     board = {}
     invalidState = False
@@ -7,7 +7,7 @@ class ChessGame():
         self.board = self.constructBoard(movesList)
         
     def constructBoard(self, movesList):
-        
+
         for m in movesList:
             newBoard = self.playGame(m)
             if (newBoard == "INVALID"):
