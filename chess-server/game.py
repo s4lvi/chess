@@ -21,7 +21,10 @@ class ChessGame:
         else:
             return self.board
     
-    def playGame(self, move):
+    def playGame(self, move, player):
         unit = move[0]
         column = move[1]
         row = move[2]
+
+    def getValidMoves(self, piece):
+        return 
