@@ -12,8 +12,22 @@ class ChessBoard extends React.Component {
             'f':{'1':<ChessPiece type="bishop" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="bishop" color="black" />},
             'g':{'1':<ChessPiece type="knight" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="knight" color="black" />},
             'h':{'1':<ChessPiece type="rook" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="rook" color="black" />}
-            }
+            },
+            firstClick:null,
+            secondClick:null,
         }
+
+        this.cancelClicks = this.cancelClicks.bind(this);
+    }
+
+    checkClicks() {
+        if (this.state.firstClick && this.state.secondClick) {
+
+        }
+    }
+
+    cancelClicks() {
+        this.setState({firstClick: null, secondClick: null});
     }
 
     pieceMove(piece, color, from, to) {
