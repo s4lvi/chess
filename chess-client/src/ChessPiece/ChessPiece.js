@@ -6,7 +6,6 @@ class ChessPiece extends React.Component {
         this.state = {
             type: props.type,
             color: props.color,
-            position: props.position,
             image: Images[props.type + props.color],
             x: null,
             y: null,
