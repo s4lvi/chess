@@ -23,7 +23,8 @@ class ChessBoard extends React.Component {
         this.pieceMove = this.pieceMove.bind(this);
     }
 
-    click(position) {
+    click(position, e) {
+        console.log(e)
         if (this.state.firstClick != null) {
             this.setState({secondClick: position}, () => {
                 this.pieceMove(this.state.firstClick, this.state.secondClick);
@@ -57,8 +58,9 @@ class ChessBoard extends React.Component {
     render() {
         return(
                 <table className="chessBoard">
+                    <tbody>
                     <tr className="chessRow">
-                        <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{this.state.board['a']['8']}</td>
+                        <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'], e)}>{this.state.board['a']['8']}</td>
                         <td className="squareBlack" id="1" onClick={(e)=>this.click(['b','8'])}>{this.state.board['b']['8']}</td>
                         <td className="squareWhite" id="2" onClick={(e)=>this.click(['c','8'])}>{this.state.board['c']['8']}</td>
                         <td className="squareBlack" id="3" onClick={(e)=>this.click(['d','8'])}>{this.state.board['d']['8']}</td>
@@ -137,6 +139,7 @@ class ChessBoard extends React.Component {
                         <td className="squareBlack" id="62" onClick={(e)=>this.click(['g','1'])}>{this.state.board['g']['1']}</td>
                         <td className="squareWhite" id="63" onClick={(e)=>this.click(['h','1'])}>{this.state.board['h']['1']}</td>
                     </tr>
+                    </tbody>
                 </table>
         )
     }
