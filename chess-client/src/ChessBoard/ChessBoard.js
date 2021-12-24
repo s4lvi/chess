@@ -4,14 +4,14 @@ class ChessBoard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            board: {'a':{'1':<ChessPiece type="rook" position='a1' />,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'b':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'c':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'd':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'e':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'f':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'g':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
-            'h':{'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null}
+            board: {'a':{'1':<ChessPiece type="rook" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'b':{'1':<ChessPiece type="knight" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'c':{'1':<ChessPiece type="bishop" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'd':{'1':<ChessPiece type="king" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'e':{'1':<ChessPiece type="queen" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'f':{'1':<ChessPiece type="bishop" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'g':{'1':<ChessPiece type="knight" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null},
+            'h':{'1':<ChessPiece type="rook" color="white" position='a1' />,'2':<ChessPiece type="pawn" color="white" position='a1' />,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null}
             }
         }
     }
