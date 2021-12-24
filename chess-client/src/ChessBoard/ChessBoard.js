@@ -43,8 +43,8 @@ class ChessBoard extends React.Component {
     pieceMove(from, to) {
         let newBoard = this.state.board;
         let piece1 = newBoard[from[0]][from[1]]
-        if (piece1 != null && from != to && piece1.props.color == this.state.player) {
-            let piece2 = newBoard[to[0]][to[1]]
+        if (piece1 !== null && from !== to && piece1.props.color === this.state.player) {
+            //let piece2 = newBoard[to[0]][to[1]]
             console.log('attempting move: ', piece1.props.type.substring(0,1)+to[0]+to[1]);
             newBoard[from[0]][from[1]] = null;
             newBoard[to[0]][to[1]] = null;
