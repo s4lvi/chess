@@ -14,7 +14,7 @@ class ChessPiece extends React.Component {
 
     render() {
         return(<div className="chessPiece">
-            <img src={img} />
+            <img src={img} alt="chess piece" />
         </div>)
     }
 }
