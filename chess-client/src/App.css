@@ -51,19 +51,29 @@
 .squareBlack {
   height: 80px;
   width: 80px;
+  max-height: 80px;
+  max-width: 80px;
   background-color:#423121;
 }
 
 .squareWhite {
   height: 80px;
   width: 80px;
+  max-height: 80px;
+  max-width: 80px;
   background-color:#f8f1e3;
 }
 
-.chessPiece {
-  
+.chessBoard img {
+  filter: drop-shadow(2px 2px 2px rgb(0, 0, 0));
 }
 
 .chessPieceActive {
-  filter: drop-shadow(5px 5px 5px rgb(0, 0, 0))
+  filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
+}
+.chessPieceActive img {
+  width: 125%;
+  height: 125%;
+  max-height: 75px;
+  max-width: 75px;
 }
