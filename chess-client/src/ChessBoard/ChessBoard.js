@@ -62,14 +62,15 @@ class ChessBoard extends React.Component {
         let piece1Ref = newBoard[from[0]][from[1]]
         if (piece1Ref !== null && from !== to && piece1Ref.props.color === this.state.player) {
             let piece1 = <ChessPiece type={piece1Ref.props.type} color={piece1Ref.props.color} />
-            //let piece2 = newBoard[to[0]][to[1]]
-            console.log('attempting move: ', piece1.props.type.substring(0,1)+to[0]+to[1]);
-            newBoard[from[0]][from[1]] = null;
-            newBoard[to[0]][to[1]] = null;
-            this.setState({board: newBoard}, ()=>{
-                newBoard[to[0]][to[1]] = piece1;
-                this.setState({board: newBoard})
-            });
+            let piece2 = newBoard[to[0]][to[1]]
+            if (piece2 === null || piece1.props.color !== piece2.props.color){
+                newBoard[from[0]][from[1]] = null;
+                newBoard[to[0]][to[1]] = null;
+                this.setState({board: newBoard}, ()=>{
+                    newBoard[to[0]][to[1]] = piece1;
+                    this.setState({board: newBoard})
+                });
+            }
         }
     }
 
