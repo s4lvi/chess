@@ -15,8 +15,7 @@ class ChessPiece extends React.Component {
     }
 
     render() {
-        console.log(this.state.selected)
-        return(<div className={"chessPiece", this.state.selected ? "chessPieceActive" : ""}>
+        return(<div className={this.state.selected ? "chessPieceActive" : ""}>
             <img src={this.state.image} alt={this.state.type} />
         </div>)
     }

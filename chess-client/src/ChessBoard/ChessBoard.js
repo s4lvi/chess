@@ -26,7 +26,7 @@ class ChessBoard extends React.Component {
     }
 
     click(position) {
-        if (this.state.firstClick != null) {
+        if (this.state.firstClick !== null) {
             let newBoard = this.state.board;
             let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
             let piece = <ChessPiece type={pieceRef.props.type} color={pieceRef.props.color} selected="false" />
