@@ -16,6 +16,8 @@ class ChessBoard extends React.Component {
             player:'white',
             firstClick:null,
             secondClick:null,
+            showMoves:false,
+            showHint:false
         }
 
         this.cancelClicks = this.cancelClicks.bind(this);
@@ -23,16 +25,31 @@ class ChessBoard extends React.Component {
         this.pieceMove = this.pieceMove.bind(this);
     }
 
-    click(position, e) {
-        console.log(e)
+    click(position) {
         if (this.state.firstClick != null) {
-            this.setState({secondClick: position}, () => {
-                this.pieceMove(this.state.firstClick, this.state.secondClick);
-                this.cancelClicks();
+            let newBoard = this.state.board;
+            let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
+            let piece = <ChessPiece type={pieceRef.props.type} color={pieceRef.props.color} selected="false" />
+            newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = null;
+            this.setState({board: newBoard}, () => {
+                newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = piece;
+                this.setState({secondClick: position, board: newBoard}, () => {
+                    this.pieceMove(this.state.firstClick, this.state.secondClick);
+                    this.cancelClicks();
+                });
             });
+
         } else {
-            this.setState({firstClick: position});
-            console.log(position)
+            let newBoard = this.state.board;
+            let pieceRef = newBoard[position[0]][position[1]];
+            if (pieceRef !== null && pieceRef.props.color === this.state.player) {
+                let piece = <ChessPiece type={pieceRef.props.type} color={pieceRef.props.color} selected="true" />
+                newBoard[position[0]][position[1]] = null;
+                this.setState({firstClick: position, board: newBoard}, () => {
+                    newBoard[position[0]][position[1]] = piece;
+                    this.setState({board: newBoard});
+                });
+            } 
         }
     }
 
@@ -42,8 +59,9 @@ class ChessBoard extends React.Component {
 
     pieceMove(from, to) {
         let newBoard = this.state.board;
-        let piece1 = newBoard[from[0]][from[1]]
-        if (piece1 !== null && from !== to && piece1.props.color === this.state.player) {
+        let piece1Ref = newBoard[from[0]][from[1]]
+        if (piece1Ref !== null && from !== to && piece1Ref.props.color === this.state.player) {
+            let piece1 = <ChessPiece type={piece1Ref.props.type} color={piece1Ref.props.color} />
             //let piece2 = newBoard[to[0]][to[1]]
             console.log('attempting move: ', piece1.props.type.substring(0,1)+to[0]+to[1]);
             newBoard[from[0]][from[1]] = null;
@@ -60,7 +78,7 @@ class ChessBoard extends React.Component {
                 <table className="chessBoard">
                     <tbody>
                     <tr className="chessRow">
-                        <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'], e)}>{this.state.board['a']['8']}</td>
+                        <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{this.state.board['a']['8']}</td>
                         <td className="squareBlack" id="1" onClick={(e)=>this.click(['b','8'])}>{this.state.board['b']['8']}</td>
                         <td className="squareWhite" id="2" onClick={(e)=>this.click(['c','8'])}>{this.state.board['c']['8']}</td>
                         <td className="squareBlack" id="3" onClick={(e)=>this.click(['d','8'])}>{this.state.board['d']['8']}</td>

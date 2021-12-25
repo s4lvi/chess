@@ -9,12 +9,14 @@ class ChessPiece extends React.Component {
             image: Images[props.type + props.color],
             x: null,
             y: null,
-            alive: true
+            alive: true,
+            selected: props.selected ? props.selected : false
         }
     }
 
     render() {
-        return(<div className="chessPiece">
+        console.log(this.state.selected)
+        return(<div className={"chessPiece", this.state.selected ? "chessPieceActive" : ""}>
             <img src={this.state.image} alt={this.state.type} />
         </div>)
     }
