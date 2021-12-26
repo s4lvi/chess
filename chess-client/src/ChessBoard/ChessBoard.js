@@ -73,7 +73,7 @@ class ChessBoard extends React.Component {
                 newBoard[to[0]][to[1]] = null;
                 this.setState({board: newBoard}, ()=>{
                     newBoard[to[0]][to[1]] = piece1;
-                    this.setState({board: newBoard, player: this.state.player == 'white' ? 'black' : 'white'})
+                    this.setState({board: newBoard, player: this.state.player === 'white' ? 'black' : 'white'})
                 });
             }
         }
@@ -88,6 +88,7 @@ class ChessBoard extends React.Component {
 
     highlightSquare(x,y) {
         let id = this.xyToId(x,y);
+        return id;
     }
 
     render() {
