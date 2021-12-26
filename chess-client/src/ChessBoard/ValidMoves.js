@@ -140,6 +140,19 @@ function isKnightMove(from, to, board, color) {
 }
 function isBishopMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
+    if (dir[0] !== 0 && dir[1] !== 0){
+        for (let i = 1; i < 9; i++) {
+            if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
+                return isEmptyOrEnemy(to, board, color);
+            }
+            if (!isEmpty([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], board)) return false;
+        }
+    } 
+    return false;
+}
+
+function isQueenMove(from, to, board, color) {
+    let dir = dirFromTo(from, to);
     for (let i = 1; i < 9; i++) {
         if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
             return isEmptyOrEnemy(to, board, color);
@@ -148,10 +161,13 @@ function isBishopMove(from, to, board, color) {
     }
     return false;
 }
-
-function isQueenMove(from, to, board, color) {
-    return false;
-}
 function isKingMove(from, to, board, color) {
+    let dir = dirFromTo(from, to);
+    for (let i = 1; i < 2; i++) {
+        if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
+            return isEmptyOrEnemy(to, board, color);
+        }
+        if (!isEmpty([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], board)) return false;
+    }
     return false;
 }

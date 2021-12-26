@@ -109,7 +109,6 @@ class ChessBoard extends React.Component {
         const board = this.state.board;
         return(
             <div>
-            <p>{this.state.player+"\'s turn"}</p>
                 <table className="chessBoard">
                     <tbody>
                     <tr className="chessRow">
@@ -194,6 +193,7 @@ class ChessBoard extends React.Component {
                     </tr>
                     </tbody>
                 </table>
+                <h3>{this.state.player+"'s turn"}</h3>
             </div>
         )
     }
