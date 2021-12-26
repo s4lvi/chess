@@ -1,7 +1,7 @@
 import * as React from "react"
 import ChessPiece from "../ChessPiece/ChessPiece";
 import {validateMove} from "./ValidMoves";
-import cloneDeep from 'lodash.clonedeep';
+import cloneDeep from 'lodash/cloneDeep';
 
 class ChessBoard extends React.Component {
     constructor(props) {
