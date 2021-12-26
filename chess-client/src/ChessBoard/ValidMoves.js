@@ -20,7 +20,7 @@ export function validateMove(piece, from, to, board) {
 function getCol(start, dir, count) {
     let alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     let startIndex = alpha.indexOf(start);
-    if (((startIndex + (dir*count)) > 0) && ((startIndex + (dir*count)) < 8)) {
+    if (((startIndex + (dir*count)) >= 0) && ((startIndex + (dir*count)) < 8)) {
         return alpha[(startIndex + (dir*count))];
     } else {
         return false
@@ -29,11 +29,18 @@ function getCol(start, dir, count) {
 function getRow(start, dir, count) {
     let alpha = ['1', '2', '3', '4', '5', '6', '7', '8'];
     let startIndex = alpha.indexOf(start);
-    if (((startIndex + (dir*count)) > 0) && ((startIndex + (dir*count)) < 8)) {
+    if (((startIndex + (dir*count)) >= 0) && ((startIndex + (dir*count)) < 8)) {
         return alpha[(startIndex + (dir*count))];
     } else {
         return false
     }
+}
+
+function equal(from, to) {
+    if (from[0] !== false && from[1] !== false && to[0] !== false && to[1] !== false) {
+        return (from[0] === to[0] && from[1] === to[1])
+    } 
+    return false
 }
 
 function isRookMove(from, to, board, color) {
@@ -62,6 +69,48 @@ function isPawnMove(from, to, board, color) {
     return false;
 }
 function isKnightMove(from, to, board, color) {
+    let move = []
+    let piece = null
+    move = [getCol(from[0],1,1),getRow(from[1],1,2)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],1,1),getRow(from[1],-1,2)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],-1,1),getRow(from[1],1,2)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],-1,1),getRow(from[1],-1,2)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],1,2),getRow(from[1],1,1)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],1,2),getRow(from[1],-1,1)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],-1,2),getRow(from[1],1,1)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
+    move = [getCol(from[0],-1,2),getRow(from[1],-1,1)]
+    if (equal(move,move)) {
+        piece = board[move[0]][move[1]]
+        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+    }
     return false;
 }
 function isBishopMove(from, to, board, color) {
