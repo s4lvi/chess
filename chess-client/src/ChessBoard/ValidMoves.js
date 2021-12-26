@@ -43,6 +43,21 @@ function equal(from, to) {
     return false
 }
 
+function isMove(move, to, board, color) {
+    // returns true if the destination is the same as 'to'
+    return (equal(move,move) && equal(move,to))
+}
+function isEmptyOrEnemy(to, board, color) {
+    // returns true if the space is empty or an enemy
+    return (board[to[0]][to[1]] === null || board[to[0]][to[1]].props.color !== color)
+}
+function isEmpty(to, board) {
+    return (board[to[0]][to[1]] === null)
+}
+function dirFromTo(from, to) {
+    return [to[0] > from[0] ? 1 : -1, to[1] > from[1] ? 1 : -1]
+}
+
 function isRookMove(from, to, board, color) {
     return false;
 }
@@ -114,8 +129,16 @@ function isKnightMove(from, to, board, color) {
     return false;
 }
 function isBishopMove(from, to, board, color) {
+    let dir = dirFromTo(from, to);
+    for (let i = 1; i < 9; i++) {
+        if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
+            return isEmptyOrEnemy(to, board, color);
+        }
+        if (!isEmpty([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], board)) return false;
+    }
     return false;
 }
+
 function isQueenMove(from, to, board, color) {
     return false;
 }

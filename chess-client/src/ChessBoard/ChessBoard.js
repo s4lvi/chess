@@ -1,6 +1,8 @@
 import * as React from "react"
 import ChessPiece from "../ChessPiece/ChessPiece";
 import {validateMove} from "./ValidMoves";
+import cloneDeep from 'lodash.clonedeep';
+
 class ChessBoard extends React.Component {
     constructor(props) {
         super(props);
@@ -18,7 +20,9 @@ class ChessBoard extends React.Component {
             firstClick:null,
             secondClick:null,
             showMoves:false,
-            showHint:false
+            showHint:false,
+            moves: [],
+            dead: {'white':[], 'black':[]}
         }
 
         this.cancelClicks = this.cancelClicks.bind(this);
@@ -28,7 +32,7 @@ class ChessBoard extends React.Component {
 
     click(position) {
         if (this.state.firstClick !== null) {
-            let newBoard = this.state.board;
+            let newBoard = cloneDeep(this.state.board);
             let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
             let piece = <ChessPiece type={pieceRef.props.type} color={pieceRef.props.color} selected="false" />
             newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = null;
@@ -40,7 +44,7 @@ class ChessBoard extends React.Component {
             });
 
         } else {
-            let newBoard = this.state.board;
+            let newBoard = cloneDeep(this.state.board);
             let pieceRef = newBoard[position[0]][position[1]];
             if (pieceRef !== null && pieceRef.props.color === this.state.player) {
                 let piece = <ChessPiece type={pieceRef.props.type} color={pieceRef.props.color} selected="true" />
@@ -54,9 +58,8 @@ class ChessBoard extends React.Component {
     }
 
     cancelClicks() {
-        let newBoard = this.state.board;
+        let newBoard = cloneDeep(this.state.board);
         this.setState({board: newBoard, firstClick: null, secondClick: null});
-        this.forceUpdate();
     }
 
     pieceMove(from, to) {
@@ -68,14 +71,21 @@ class ChessBoard extends React.Component {
             && validateMove(piece1Ref, from, to, this.state.board)) {
             let piece1 = <ChessPiece type={piece1Ref.props.type} color={piece1Ref.props.color} />
             let piece2 = newBoard[to[0]][to[1]]
-            if (piece2 === null || piece1.props.color !== piece2.props.color){
-                newBoard[from[0]][from[1]] = null;
-                newBoard[to[0]][to[1]] = null;
-                this.setState({board: newBoard}, ()=>{
-                    newBoard[to[0]][to[1]] = piece1;
-                    this.setState({board: newBoard, player: this.state.player === 'white' ? 'black' : 'white'})
-                });
+            if (piece2 !== null) {
+                let newDead = cloneDeep(this.state.dead);
+                newDead[piece2.props.color].push(piece2.props.type)
+                console.log(newDead);
+                this.setState({dead:newDead});
             }
+            newBoard[from[0]][from[1]] = null;
+            newBoard[to[0]][to[1]] = null;
+            this.setState({board: newBoard}, ()=>{
+                newBoard[to[0]][to[1]] = piece1;
+                let move = [this.state.player,piece1Ref.props.type,to[0],to[1]]  
+                let moves = this.state.moves;
+                moves.push(move);
+                this.setState({board: newBoard, player: this.state.player === 'white' ? 'black' : 'white', moves: moves})
+            });
         }
         this.cancelClicks();
     }
@@ -91,9 +101,14 @@ class ChessBoard extends React.Component {
         return id;
     }
 
+    getDead(color) {
+        return this.state.dead[color];
+    }
+
     render() {
         const board = this.state.board;
         return(
+            <div>
                 <table className="chessBoard">
                     <tbody>
                     <tr className="chessRow">
@@ -178,6 +193,10 @@ class ChessBoard extends React.Component {
                     </tr>
                     </tbody>
                 </table>
+                <h3>Turn: {this.state.player}</h3>
+                <h3>Dead White: {this.getDead('white')}</h3>
+                <h3>Dead Black: {this.getDead('black')}</h3>
+            </div>
         )
     }
 }
