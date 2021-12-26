@@ -52,13 +52,23 @@ function isEmptyOrEnemy(to, board, color) {
     return (board[to[0]][to[1]] === null || board[to[0]][to[1]].props.color !== color)
 }
 function isEmpty(to, board) {
-    return (board[to[0]][to[1]] === null)
+    return (equal(to, to) && board[to[0]][to[1]] === null)
 }
 function dirFromTo(from, to) {
-    return [to[0] > from[0] ? 1 : -1, to[1] > from[1] ? 1 : -1]
+    return [to[0] === from[0] ? 0 : to[0] > from[0] ? 1 : -1, to[1] === from[1] ? 0 : to[1] > from[1] ? 1 : -1]
 }
 
 function isRookMove(from, to, board, color) {
+    let dir = dirFromTo(from, to);
+    console.log(dir)
+    if (dir[0] === 0 || dir[1] === 0) {
+        for (let i = 1; i < 9; i++) {
+            if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
+                return isEmptyOrEnemy(to, board, color);
+            }
+            if (!isEmpty([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], board)) return false;
+        }
+    }
     return false;
 }
 function isPawnMove(from, to, board, color) {

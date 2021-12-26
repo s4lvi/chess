@@ -109,6 +109,7 @@ class ChessBoard extends React.Component {
         const board = this.state.board;
         return(
             <div>
+            <p>{this.state.player+"\'s turn"}</p>
                 <table className="chessBoard">
                     <tbody>
                     <tr className="chessRow">
@@ -193,9 +194,6 @@ class ChessBoard extends React.Component {
                     </tr>
                     </tbody>
                 </table>
-                <h3>Turn: {this.state.player}</h3>
-                <h3>Dead White: {this.getDead('white')}</h3>
-                <h3>Dead Black: {this.getDead('black')}</h3>
             </div>
         )
     }
