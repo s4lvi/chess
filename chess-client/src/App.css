@@ -69,7 +69,6 @@
 }
 
 .chessPieceActive {
-  filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
 }
 .chessPieceActive img {
   width: 125%;
