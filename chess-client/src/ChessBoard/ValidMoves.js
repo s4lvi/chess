@@ -12,6 +12,8 @@ export function validateMove(piece, from, to, board) {
             return isQueenMove(from, to, board, piece.props.color);
         case 'king':
             return isKingMove(from, to, board, piece.props.color);
+        default:
+            return false;
     }
 }
 
