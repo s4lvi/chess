@@ -1,5 +1,5 @@
 import * as React from "react"
-import ChessPiece from "../ChessPiece/ChessPiece";
+import {ChessPiece, getImageForPiece} from "../ChessPiece/ChessPiece";
 import {validateMove} from "./ValidMoves";
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -22,7 +22,7 @@ class ChessBoard extends React.Component {
             showMoves:false,
             showHint:false,
             moves: [],
-            dead: {'white':[], 'black':[]}
+            dead: [[],[]]
         }
 
         this.cancelClicks = this.cancelClicks.bind(this);
@@ -72,9 +72,12 @@ class ChessBoard extends React.Component {
             let piece1 = <ChessPiece type={piece1Ref.props.type} color={piece1Ref.props.color} />
             let piece2 = newBoard[to[0]][to[1]]
             if (piece2 !== null) {
-                let newDead = cloneDeep(this.state.dead);
-                newDead[piece2.props.color].push(piece2.props.type)
-                console.log(newDead);
+                let newDead = this.state.dead;
+                if (piece2.props.color === 'white') {
+                    newDead[0].push(piece2.props.type)
+                } else {
+                    newDead[1].push(piece2.props.type)
+                }
                 this.setState({dead:newDead});
             }
             newBoard[from[0]][from[1]] = null;
@@ -107,10 +110,17 @@ class ChessBoard extends React.Component {
 
     render() {
         const board = this.state.board;
+        const blackDead = this.state.dead[0].map(d => {return <img src={getImageForPiece(d,'black')} width='12px'/>})
+        const whiteDead = this.state.dead[1].map(d => {return <img src={getImageForPiece(d,'white')} width='12px'/>})
         return(
             <div>
                 <table className="chessBoard">
                     <tbody>
+                    <tr className="infoRow">
+                        <td colspan="3">{whiteDead}</td>
+                        <td colspan="2">{this.state.winner ? this.state.winner+" wins!" : this.state.player+"'s turn"}</td>
+                        <td colspan="3">{blackDead}</td>
+                    </tr>
                     <tr className="chessRow">
                         <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{board['a']['8']}</td>
                         <td className="squareBlack" id="1" onClick={(e)=>this.click(['b','8'])}>{board['b']['8']}</td>
@@ -193,7 +203,6 @@ class ChessBoard extends React.Component {
                     </tr>
                     </tbody>
                 </table>
-                <h3>{this.state.winner ? this.state.winner+" wins!" : this.state.player+"'s turn"}</h3>
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Images } from "./images";
-class ChessPiece extends React.Component {
+export class ChessPiece extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,4 +21,6 @@ class ChessPiece extends React.Component {
     }
 }
 
-export default ChessPiece;
+export function getImageForPiece(type, color) {
+    return Images[type + color];
+}

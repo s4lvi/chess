@@ -48,6 +48,11 @@
   width:640px;
 }
 
+.infoRow {
+  color: white;
+  background-color: #25190e;
+}
+
 .squareBlack {
   height: 80px;
   width: 80px;

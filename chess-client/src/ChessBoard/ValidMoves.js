@@ -250,7 +250,6 @@ function isKingCheck(board, color) {
     }
     else {
         for (let k of Object.keys(pieces['white'])) {
-            console.log(pieces['white'][k])
             for (let p of pieces['white'][k]) {
                 if (validateMove(board[p[0]][p[1]], p, pieces['black']['king'][0], board, false)) return true;
             }
