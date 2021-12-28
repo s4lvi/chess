@@ -16,18 +16,76 @@ class ChessBoard extends React.Component {
             'g':{'1':<ChessPiece type="night" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="night" color="black" />},
             'h':{'1':<ChessPiece type="rook" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="rook" color="black" />}
             },
-            player:'white',
+            matchId: props.matchId ? props.matchId : this.generateUUID(),
+            player: props.color ? props.color : 'white',
+            turn: props.turn ? props.turn : 'unnamedPlayer',
+            playerId: props.playerId ? props.playerId : 'unnamedPlayer',
+            opponentId: props.opponentId ? props.opponentId : null,
             firstClick:null,
             secondClick:null,
             showMoves:false,
             showHint:false,
             moves: [],
-            dead: [[],[]]
+            dead: props.dead ? props.dead : [[],[]]
         }
 
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
         this.pieceMove = this.pieceMove.bind(this);
+    }
+
+    generateUUID() { // Public Domain/MIT
+        var d = new Date().getTime();//Timestamp
+        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16;//random number between 0 and 16
+            if(d > 0){//Use timestamp until depleted
+                r = (d + r)%16 | 0;
+                d = Math.floor(d/16);
+            } else {//Use microseconds since page-load if supported
+                r = (d2 + r)%16 | 0;
+                d2 = Math.floor(d2/16);
+            }
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    }
+
+    sendMove() {
+        let body = {
+            board: this.packageBoard(),
+            players: [this.state.playerId, this.state.opponentId],
+            nextMove: this.state.turn,
+            matchId: this.state.matchId,
+            dead: this.state.dead,
+            open: this.state.opponentId ? false : true
+        };
+
+        fetch('https://p41be4r787.execute-api.us-east-2.amazonaws.com/default/play',
+        {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': 'nMTbkWTdaT1Hz2X6NZklu5LDC579OWz4XqBp8Mrc'
+            },
+            method: "POST",
+            body: JSON.stringify(body)
+        })
+            .then((response) => response.json()).then(res => console.log(JSON.parse(res.body)))
+            .catch((error) => {
+                console.log(error)
+                // Code for handling the error
+            });
+    }
+
+    packageBoard() {
+        let board = cloneDeep(this.state.board);
+        for (let i of Object.keys(board)) {
+            for (let j of Object.keys(board[i])) {
+                if (board[i][j] !== null) {
+                    board[i][j] = [board[i][j].props.color, board[i][j].props.type]
+                }
+            }
+        }
+        return board;
     }
 
     click(position) {
@@ -87,7 +145,10 @@ class ChessBoard extends React.Component {
                 let move = [this.state.player,piece1Ref.props.type,to[0],to[1]]  
                 let moves = this.state.moves;
                 moves.push(move);
-                this.setState({board: newBoard, player: this.state.player === 'white' ? 'black' : 'white', moves: moves})
+                this.setState({board: newBoard, 
+                                player: this.state.player === 'white' ? 'black' : 'white', 
+                                turn: this.state.turn === this.state.playerId ? this.state.opponentId : this.state.playerId, 
+                                moves: moves}, () => this.sendMove())
             });
         }
         this.cancelClicks();
@@ -112,14 +173,18 @@ class ChessBoard extends React.Component {
         const board = this.state.board;
         const blackDead = this.state.dead[0].map(d => {return <img src={getImageForPiece(d,'white')} width='12px' alt={d}/>})
         const whiteDead = this.state.dead[1].map(d => {return <img src={getImageForPiece(d,'black')} width='12px' alt={d}/>})
+        const bannerText = this.state.opponentId ? this.state.playerId + " vs " + this.state.opponentId : this.state.playerId + "'s open match"
         return(
             <div>
                 <table className="chessBoard">
                     <tbody>
                     <tr className="infoRow">
-                        <td colspan="3">{whiteDead}</td>
-                        <td colspan="2">{this.state.winner ? this.state.winner+" wins!" : this.state.player+"'s turn"}</td>
-                        <td colspan="3">{blackDead}</td>
+                        <td colSpan="8">{bannerText}</td>
+                    </tr>
+                    <tr className="infoRow">
+                        <td colSpan="3">{whiteDead}</td>
+                        <td colSpan="2">{this.state.winner ? this.state.winner+" wins!" : this.state.turn+"'s turn"}</td>
+                        <td colSpan="3">{blackDead}</td>
                     </tr>
                     <tr className="chessRow">
                         <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{board['a']['8']}</td>
