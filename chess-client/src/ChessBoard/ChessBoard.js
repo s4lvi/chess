@@ -193,7 +193,7 @@ class ChessBoard extends React.Component {
                     </tr>
                     </tbody>
                 </table>
-                <h3>{this.state.player+"'s turn"}</h3>
+                <h3>{this.state.winner ? this.state.winner+" wins!" : this.state.player+"'s turn"}</h3>
             </div>
         )
     }

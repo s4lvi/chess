@@ -65,7 +65,12 @@ function generatePieceDict(board) {
     let dict = {'white':{},'black':{}}
     for (let i of Object.keys(board)) {
         for (let j of Object.keys(board[i])) {
-            if (board[i][j] !== null) dict[board[i][j].props.color][board[i][j].props.type] = [i,j]
+            if (board[i][j] !== null) {
+                if (!(board[i][j].props.type in dict[board[i][j].props.color])) {
+                    dict[board[i][j].props.color][board[i][j].props.type] = [];
+                }
+                dict[board[i][j].props.color][board[i][j].props.type].push([i,j])
+            }
         }
     }
     return dict;
@@ -121,7 +126,6 @@ function dirFromTo(from, to) {
 
 function isRookMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
-    console.log(dir)
     if (dir[0] === 0 || dir[1] === 0) {
         for (let i = 1; i < 9; i++) {
             if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
@@ -237,14 +241,19 @@ function isKingCheck(board, color) {
     let pieces = generatePieceDict(board);
     if (color === 'white') {
         for (let k of Object.keys(pieces['black'])) {
-            let pieceLoc = pieces['black'][k]
-            if (validateMove(board[pieceLoc[0]][pieceLoc[1]], pieceLoc, pieces['white']['king'], board, false)) return true;
+            for (let p of pieces['black'][k]) {
+                if (validateMove(board[p[0]][p[1]], p, pieces['white']['king'][0], board, false)) {
+                    return true;
+                }
+            }
         }
     }
     else {
         for (let k of Object.keys(pieces['white'])) {
-            let pieceLoc = pieces['white'][k]
-            if (validateMove(board[pieceLoc[0]][pieceLoc[1]], pieceLoc, pieces['black']['king'], board, false)) return true;
+            console.log(pieces['white'][k])
+            for (let p of pieces['white'][k]) {
+                if (validateMove(board[p[0]][p[1]], p, pieces['black']['king'][0], board, false)) return true;
+            }
         }
     }
     return false;

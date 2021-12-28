@@ -53,6 +53,8 @@
   width: 80px;
   max-height: 80px;
   max-width: 80px;
+  min-height: 80px;
+  min-width: 80px;
   background-color:#423121;
 }
 
@@ -61,6 +63,8 @@
   width: 80px;
   max-height: 80px;
   max-width: 80px;
+  min-height: 80px;
+  min-width: 80px;
   background-color:#f8f1e3;
 }
 
