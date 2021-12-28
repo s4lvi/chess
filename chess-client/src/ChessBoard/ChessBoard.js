@@ -110,8 +110,8 @@ class ChessBoard extends React.Component {
 
     render() {
         const board = this.state.board;
-        const blackDead = this.state.dead[0].map(d => {return <img src={getImageForPiece(d,'black')} width='12px'/>})
-        const whiteDead = this.state.dead[1].map(d => {return <img src={getImageForPiece(d,'white')} width='12px'/>})
+        const blackDead = this.state.dead[0].map(d => {return <img src={getImageForPiece(d,'white')} width='12px' alt={d}/>})
+        const whiteDead = this.state.dead[1].map(d => {return <img src={getImageForPiece(d,'black')} width='12px' alt={d}/>})
         return(
             <div>
                 <table className="chessBoard">
