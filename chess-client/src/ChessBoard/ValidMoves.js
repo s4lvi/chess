@@ -1,20 +1,81 @@
-export function validateMove(piece, from, to, board) {
+import cloneDeep from 'lodash/cloneDeep';
+
+export function validateMove(piece, from, to, board, withCheck = true) {
     switch (piece.props.type) {
         case 'rook':
-            return isRookMove(from, to, board, piece.props.color);
+            if (isRookMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         case 'pawn':
-            return isPawnMove(from, to, board, piece.props.color);
+            if (isPawnMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         case 'night':
-            return isKnightMove(from, to, board, piece.props.color);
+            if (isKnightMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         case 'bishop':
-            return isBishopMove(from, to, board, piece.props.color);
+            if (isBishopMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         case 'queen':
-            return isQueenMove(from, to, board, piece.props.color);
+            if (isQueenMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         case 'king':
-            return isKingMove(from, to, board, piece.props.color);
+            if (isKingMove(from, to, board, piece.props.color)) {
+                if (withCheck) {
+                    let nextBoard = generateBoard(piece, from, to, board);
+                    return !isKingCheck(nextBoard, piece.props.color)
+                }
+                return true;
+            }
+            return false
         default:
             return false;
     }
+}
+
+function generatePieceDict(board) {
+    let dict = {'white':{},'black':{}}
+    for (let i of Object.keys(board)) {
+        for (let j of Object.keys(board[i])) {
+            if (board[i][j] !== null) dict[board[i][j].props.color][board[i][j].props.type] = [i,j]
+        }
+    }
+    return dict;
+}
+
+function generateBoard(piece, from, to, board) {
+    let newBoard = cloneDeep(board);
+    newBoard[from[0]][from[1]] = null;
+    newBoard[to[0]][to[1]] = piece;
+    return newBoard;
 }
 
 function getCol(start, dir, count) {
@@ -168,6 +229,23 @@ function isKingMove(from, to, board, color) {
             return isEmptyOrEnemy(to, board, color);
         }
         if (!isEmpty([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], board)) return false;
+    }
+    return false;
+}
+
+function isKingCheck(board, color) {
+    let pieces = generatePieceDict(board);
+    if (color === 'white') {
+        for (let k of Object.keys(pieces['black'])) {
+            let pieceLoc = pieces['black'][k]
+            if (validateMove(board[pieceLoc[0]][pieceLoc[1]], pieceLoc, pieces['white']['king'], board, false)) return true;
+        }
+    }
+    else {
+        for (let k of Object.keys(pieces['white'])) {
+            let pieceLoc = pieces['white'][k]
+            if (validateMove(board[pieceLoc[0]][pieceLoc[1]], pieceLoc, pieces['black']['king'], board, false)) return true;
+        }
     }
     return false;
 }
