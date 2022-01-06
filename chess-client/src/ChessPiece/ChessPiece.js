@@ -15,8 +15,8 @@ export class ChessPiece extends React.Component {
     }
 
     render() {
-        return(<div className={this.state.selected ? "chessPieceActive" : ""}>
-            <img src={this.state.image} alt={this.state.type} />
+        return(<div key={this.state.type + Math.random() * 999} className={this.state.selected ? "chessPieceActive" : ""}>
+            <img src={this.state.image} key={this.state.type + Math.random() * 999} alt={this.state.color + "-" + this.state.type} />
         </div>)
     }
 }

@@ -1,57 +1,57 @@
 import cloneDeep from 'lodash/cloneDeep';
 
 export function validateMove(piece, from, to, board, withCheck = true) {
-    switch (piece.props.type) {
+    switch (piece[1]) {
         case 'rook':
-            if (isRookMove(from, to, board, piece.props.color)) {
+            if (isRookMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
             return false
         case 'pawn':
-            if (isPawnMove(from, to, board, piece.props.color)) {
+            if (isPawnMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
             return false
         case 'night':
-            if (isKnightMove(from, to, board, piece.props.color)) {
+            if (isKnightMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
             return false
         case 'bishop':
-            if (isBishopMove(from, to, board, piece.props.color)) {
+            if (isBishopMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
             return false
         case 'queen':
-            if (isQueenMove(from, to, board, piece.props.color)) {
+            if (isQueenMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
             return false
         case 'king':
-            if (isKingMove(from, to, board, piece.props.color)) {
+            if (isKingMove(from, to, board, piece[0])) {
                 if (withCheck) {
                     let nextBoard = generateBoard(piece, from, to, board);
-                    return !isKingCheck(nextBoard, piece.props.color)
+                    return !isKingCheck(nextBoard, piece[0])
                 }
                 return true;
             }
@@ -66,10 +66,10 @@ function generatePieceDict(board) {
     for (let i of Object.keys(board)) {
         for (let j of Object.keys(board[i])) {
             if (board[i][j] !== null) {
-                if (!(board[i][j].props.type in dict[board[i][j].props.color])) {
-                    dict[board[i][j].props.color][board[i][j].props.type] = [];
+                if (!(board[i][j][1] in dict[board[i][j][0]])) {
+                    dict[board[i][j][0]][board[i][j][1]] = [];
                 }
-                dict[board[i][j].props.color][board[i][j].props.type].push([i,j])
+                dict[board[i][j][0]][board[i][j][1]].push([i,j])
             }
         }
     }
@@ -115,7 +115,7 @@ function isMove(move, to, board, color) {
 }
 function isEmptyOrEnemy(to, board, color) {
     // returns true if the space is empty or an enemy
-    return (board[to[0]][to[1]] === null || board[to[0]][to[1]].props.color !== color)
+    return (board[to[0]][to[1]] === null || board[to[0]][to[1]][0] !== color)
 }
 function isEmpty(to, board) {
     return (equal(to, to) && board[to[0]][to[1]] === null)
@@ -153,9 +153,9 @@ function isPawnMove(from, to, board, color) {
     let diagRight = [getCol(from[0], 1, 1),getRow(from[1], dir, 1)]
     let diagLeft = [getCol(from[0], -1, 1),getRow(from[1], dir, 1)]
     if (diagRight[0] === to[0] && diagRight[1] === to[1] 
-        && board[diagRight[0]][diagRight[1]] !== null && board[diagRight[0]][diagRight[1]].props.color !== color) return true
+        && board[diagRight[0]][diagRight[1]] !== null && board[diagRight[0]][diagRight[1]][0] !== color) return true
     if (diagLeft[0] === to[0] && diagLeft[1] === to[1] 
-        && board[diagLeft[0]][diagLeft[1]] !== null && board[diagLeft[0]][diagLeft[1]].props.color !== color) return true
+        && board[diagLeft[0]][diagLeft[1]] !== null && board[diagLeft[0]][diagLeft[1]][0] !== color) return true
     return false;
 }
 function isKnightMove(from, to, board, color) {
@@ -164,42 +164,42 @@ function isKnightMove(from, to, board, color) {
     move = [getCol(from[0],1,1),getRow(from[1],1,2)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],1,1),getRow(from[1],-1,2)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],-1,1),getRow(from[1],1,2)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],-1,1),getRow(from[1],-1,2)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],1,2),getRow(from[1],1,1)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],1,2),getRow(from[1],-1,1)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],-1,2),getRow(from[1],1,1)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     move = [getCol(from[0],-1,2),getRow(from[1],-1,1)]
     if (equal(move,move)) {
         piece = board[move[0]][move[1]]
-        if (equal(move, to) && (piece === null || piece.props.color !== color)) return true 
+        if (equal(move, to) && (piece === null || piece[0] !== color)) return true 
     }
     return false;
 }
