@@ -1,17 +1,11 @@
 import './App.css';
-import ChessBoard from './ChessBoard/ChessBoard';
-import MatchBrowser from './MatchBrowser/MatchBrowser';
-import Login from './Login/Login';
-import Register from './Login/Register';
+import Game from './Game/Game';
 
 function App() {
 
   return (
     <div className="App">
-      <Login />
-      <Register />
-      <MatchBrowser />
-      <ChessBoard />
+      <Game />
     </div>
   );
 }
