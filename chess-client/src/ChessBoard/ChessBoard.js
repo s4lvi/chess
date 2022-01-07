@@ -1,24 +1,25 @@
 import * as React from "react"
 import {ChessPiece, getImageForPiece} from "../ChessPiece/ChessPiece";
 import {validateMove} from "./ValidMoves";
-import cloneDeep from 'lodash/cloneDeep';
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import SocketClient from "../SocketClient/SocketClient";
 
 class ChessBoard extends React.Component {
     constructor(props) {
         super(props);
-        let board = this.packageBoard({'a':{'1':<ChessPiece type="rook" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="rook" color="black" />},
-        'b':{'1':<ChessPiece type="night" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="night" color="black" />},
-        'c':{'1':<ChessPiece type="bishop" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="bishop" color="black" />},
-        'd':{'1':<ChessPiece type="king" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="king" color="black" />},
-        'e':{'1':<ChessPiece type="queen" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="queen" color="black" />},
-        'f':{'1':<ChessPiece type="bishop" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="bishop" color="black" />},
-        'g':{'1':<ChessPiece type="night" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="night" color="black" />},
-        'h':{'1':<ChessPiece type="rook" color="white" />,'2':<ChessPiece type="pawn" color="white" />,'3':null,'4':null,'5':null,'6':null,'7':<ChessPiece type="pawn" color="black" />,'8':<ChessPiece type="rook" color="black" />}
-        });
+        let board = {'a':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]},
+        'b':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
+        'c':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
+        'd':{'1':["white","king"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","king"]},
+        'e':{'1':["white","queen"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","queen"]},
+        'f':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
+        'g':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
+        'h':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]}
+        }
         let playerId = "player-"+Math.floor(Math.random() * 9999);
         this.state = {
             board: board,
@@ -230,108 +231,103 @@ class ChessBoard extends React.Component {
         const bannerText = this.state.opponentId ? this.state.playerId + " vs " + this.state.opponentId : this.state.playerId + "'s open match"
 
         return(
-            <div>
-            <Stack spacing={2} direction="row">
-                <TextField id="standard-basic" label="display name" value={this.state.playerId ? this.state.playerId : ""} onChange={(e) => this.setState({playerId: e.target.value})} variant="standard" />
-                { this.state.connected === false &&
-                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.connect()} >Connect</Button>
-                }
-                <TextField id="standard-basic" label="match id" value={this.state.matchId ? this.state.matchId : ""} onChange={(e) => this.setState({matchId: e.target.value})} variant="standard" />
-                <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.join()} >Join</Button>
-            </Stack>
-            <table className="chessBoard">
-            <tbody>
-            <tr className="infoRow">
-                <td colSpan="8">{bannerText}</td>
-            </tr>
-            <tr className="infoRow">
-                <td colSpan="3">{whiteDead}</td>
-                <td colSpan="2">{this.state.winner ? this.state.winner+" wins!" : this.state.turn+"'s turn"}</td>
-                <td colSpan="3">{blackDead}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{this.getPiece('a','8')}</td>
-                <td className="squareBlack" id="1" onClick={(e)=>this.click(['b','8'])}>{this.getPiece('b','8')}</td>
-                <td className="squareWhite" id="2" onClick={(e)=>this.click(['c','8'])}>{this.getPiece('c','8')}</td>
-                <td className="squareBlack" id="3" onClick={(e)=>this.click(['d','8'])}>{this.getPiece('d','8')}</td>
-                <td className="squareWhite" id="4" onClick={(e)=>this.click(['e','8'])}>{this.getPiece('e','8')}</td>
-                <td className="squareBlack" id="5" onClick={(e)=>this.click(['f','8'])}>{this.getPiece('f','8')}</td>
-                <td className="squareWhite" id="6" onClick={(e)=>this.click(['g','8'])}>{this.getPiece('g','8')}</td>
-                <td className="squareBlack" id="7" onClick={(e)=>this.click(['h','8'])}>{this.getPiece('h','8')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareBlack" id="8" onClick={(e)=>this.click(['a','7'])}>{this.getPiece('a','7')}</td>
-                <td className="squareWhite" id="9" onClick={(e)=>this.click(['b','7'])}>{this.getPiece('b','7')}</td>
-                <td className="squareBlack" id="10" onClick={(e)=>this.click(['c','7'])}>{this.getPiece('c','7')}</td>
-                <td className="squareWhite" id="11" onClick={(e)=>this.click(['d','7'])}>{this.getPiece('d','7')}</td>
-                <td className="squareBlack" id="12" onClick={(e)=>this.click(['e','7'])}>{this.getPiece('e','7')}</td>
-                <td className="squareWhite" id="13" onClick={(e)=>this.click(['f','7'])}>{this.getPiece('f','7')}</td>
-                <td className="squareBlack" id="14" onClick={(e)=>this.click(['g','7'])}>{this.getPiece('g','7')}</td>
-                <td className="squareWhite" id="15" onClick={(e)=>this.click(['h','7'])}>{this.getPiece('h','7')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareWhite" id="16" onClick={(e)=>this.click(['a','6'])}>{this.getPiece('a','6')}</td>
-                <td className="squareBlack" id="17" onClick={(e)=>this.click(['b','6'])}>{this.getPiece('b','6')}</td>
-                <td className="squareWhite" id="18" onClick={(e)=>this.click(['c','6'])}>{this.getPiece('c','6')}</td>
-                <td className="squareBlack" id="19" onClick={(e)=>this.click(['d','6'])}>{this.getPiece('d','6')}</td>
-                <td className="squareWhite" id="20" onClick={(e)=>this.click(['e','6'])}>{this.getPiece('e','6')}</td>
-                <td className="squareBlack" id="21" onClick={(e)=>this.click(['f','6'])}>{this.getPiece('f','6')}</td>
-                <td className="squareWhite" id="22" onClick={(e)=>this.click(['g','6'])}>{this.getPiece('g','6')}</td>
-                <td className="squareBlack" id="23" onClick={(e)=>this.click(['h','6'])}>{this.getPiece('h','6')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareBlack" id="24" onClick={(e)=>this.click(['a','5'])}>{this.getPiece('a','5')}</td>
-                <td className="squareWhite" id="25" onClick={(e)=>this.click(['b','5'])}>{this.getPiece('b','5')}</td>
-                <td className="squareBlack" id="26" onClick={(e)=>this.click(['c','5'])}>{this.getPiece('c','5')}</td>
-                <td className="squareWhite" id="27" onClick={(e)=>this.click(['d','5'])}>{this.getPiece('d','5')}</td>
-                <td className="squareBlack" id="28" onClick={(e)=>this.click(['e','5'])}>{this.getPiece('e','5')}</td>
-                <td className="squareWhite" id="29" onClick={(e)=>this.click(['f','5'])}>{this.getPiece('f','5')}</td>
-                <td className="squareBlack" id="30" onClick={(e)=>this.click(['g','5'])}>{this.getPiece('g','5')}</td>
-                <td className="squareWhite" id="31" onClick={(e)=>this.click(['h','5'])}>{this.getPiece('h','5')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareWhite" id="32" onClick={(e)=>this.click(['a','4'])}>{this.getPiece('a','4')}</td>
-                <td className="squareBlack" id="33" onClick={(e)=>this.click(['b','4'])}>{this.getPiece('b','4')}</td>
-                <td className="squareWhite" id="34" onClick={(e)=>this.click(['c','4'])}>{this.getPiece('c','4')}</td>
-                <td className="squareBlack" id="35" onClick={(e)=>this.click(['d','4'])}>{this.getPiece('d','4')}</td>
-                <td className="squareWhite" id="36" onClick={(e)=>this.click(['e','4'])}>{this.getPiece('e','4')}</td>
-                <td className="squareBlack" id="37" onClick={(e)=>this.click(['f','4'])}>{this.getPiece('f','4')}</td>
-                <td className="squareWhite" id="38" onClick={(e)=>this.click(['g','4'])}>{this.getPiece('g','4')}</td>
-                <td className="squareBlack" id="39" onClick={(e)=>this.click(['h','4'])}>{this.getPiece('h','4')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareBlack" id="40" onClick={(e)=>this.click(['a','3'])}>{this.getPiece('a','3')}</td>
-                <td className="squareWhite" id="41" onClick={(e)=>this.click(['b','3'])}>{this.getPiece('b','3')}</td>
-                <td className="squareBlack" id="42" onClick={(e)=>this.click(['c','3'])}>{this.getPiece('c','3')}</td>
-                <td className="squareWhite" id="43" onClick={(e)=>this.click(['d','3'])}>{this.getPiece('d','3')}</td>
-                <td className="squareBlack" id="44" onClick={(e)=>this.click(['e','3'])}>{this.getPiece('e','3')}</td>
-                <td className="squareWhite" id="45" onClick={(e)=>this.click(['f','3'])}>{this.getPiece('f','3')}</td>
-                <td className="squareBlack" id="46" onClick={(e)=>this.click(['g','3'])}>{this.getPiece('g','3')}</td>
-                <td className="squareWhite" id="47" onClick={(e)=>this.click(['h','3'])}>{this.getPiece('h','3')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareWhite" id="48" onClick={(e)=>this.click(['a','2'])}>{this.getPiece('a','2')}</td>
-                <td className="squareBlack" id="49" onClick={(e)=>this.click(['b','2'])}>{this.getPiece('b','2')}</td>
-                <td className="squareWhite" id="50" onClick={(e)=>this.click(['c','2'])}>{this.getPiece('c','2')}</td>
-                <td className="squareBlack" id="51" onClick={(e)=>this.click(['d','2'])}>{this.getPiece('d','2')}</td>
-                <td className="squareWhite" id="52" onClick={(e)=>this.click(['e','2'])}>{this.getPiece('e','2')}</td>
-                <td className="squareBlack" id="53" onClick={(e)=>this.click(['f','2'])}>{this.getPiece('f','2')}</td>
-                <td className="squareWhite" id="54" onClick={(e)=>this.click(['g','2'])}>{this.getPiece('g','2')}</td>
-                <td className="squareBlack" id="55" onClick={(e)=>this.click(['h','2'])}>{this.getPiece('h','2')}</td>
-            </tr>
-            <tr className="chessRow">
-                <td className="squareBlack" id="56" onClick={(e)=>this.click(['a','1'])}>{this.getPiece('a','1')}</td>
-                <td className="squareWhite" id="57" onClick={(e)=>this.click(['b','1'])}>{this.getPiece('b','1')}</td>
-                <td className="squareBlack" id="58" onClick={(e)=>this.click(['c','1'])}>{this.getPiece('c','1')}</td>
-                <td className="squareWhite" id="59" onClick={(e)=>this.click(['d','1'])}>{this.getPiece('d','1')}</td>
-                <td className="squareBlack" id="60" onClick={(e)=>this.click(['e','1'])}>{this.getPiece('e','1')}</td>
-                <td className="squareWhite" id="61" onClick={(e)=>this.click(['f','1'])}>{this.getPiece('f','1')}</td>
-                <td className="squareBlack" id="62" onClick={(e)=>this.click(['g','1'])}>{this.getPiece('g','1')}</td>
-                <td className="squareWhite" id="63" onClick={(e)=>this.click(['h','1'])}>{this.getPiece('h','1')}</td>
-            </tr>
-            </tbody>
-        </table>
-            </div>
+            
+            <Card sx={{backgroundColor: "#f8f1e3"}} variant="outlined">
+                <CardContent>
+                <table className="chessBoard">
+                <tbody>
+                <tr className="infoRow">
+                    <td colSpan="8">{bannerText}</td>
+                </tr>
+                <tr className="infoRow">
+                    <td colSpan="3">{whiteDead}</td>
+                    <td colSpan="2">{this.state.winner ? this.state.winner+" wins!" : this.state.turn+"'s turn"}</td>
+                    <td colSpan="3">{blackDead}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareWhite" id="0" onClick={(e)=>this.click(['a','8'])}>{this.getPiece('a','8')}</td>
+                    <td className="squareBlack" id="1" onClick={(e)=>this.click(['b','8'])}>{this.getPiece('b','8')}</td>
+                    <td className="squareWhite" id="2" onClick={(e)=>this.click(['c','8'])}>{this.getPiece('c','8')}</td>
+                    <td className="squareBlack" id="3" onClick={(e)=>this.click(['d','8'])}>{this.getPiece('d','8')}</td>
+                    <td className="squareWhite" id="4" onClick={(e)=>this.click(['e','8'])}>{this.getPiece('e','8')}</td>
+                    <td className="squareBlack" id="5" onClick={(e)=>this.click(['f','8'])}>{this.getPiece('f','8')}</td>
+                    <td className="squareWhite" id="6" onClick={(e)=>this.click(['g','8'])}>{this.getPiece('g','8')}</td>
+                    <td className="squareBlack" id="7" onClick={(e)=>this.click(['h','8'])}>{this.getPiece('h','8')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareBlack" id="8" onClick={(e)=>this.click(['a','7'])}>{this.getPiece('a','7')}</td>
+                    <td className="squareWhite" id="9" onClick={(e)=>this.click(['b','7'])}>{this.getPiece('b','7')}</td>
+                    <td className="squareBlack" id="10" onClick={(e)=>this.click(['c','7'])}>{this.getPiece('c','7')}</td>
+                    <td className="squareWhite" id="11" onClick={(e)=>this.click(['d','7'])}>{this.getPiece('d','7')}</td>
+                    <td className="squareBlack" id="12" onClick={(e)=>this.click(['e','7'])}>{this.getPiece('e','7')}</td>
+                    <td className="squareWhite" id="13" onClick={(e)=>this.click(['f','7'])}>{this.getPiece('f','7')}</td>
+                    <td className="squareBlack" id="14" onClick={(e)=>this.click(['g','7'])}>{this.getPiece('g','7')}</td>
+                    <td className="squareWhite" id="15" onClick={(e)=>this.click(['h','7'])}>{this.getPiece('h','7')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareWhite" id="16" onClick={(e)=>this.click(['a','6'])}>{this.getPiece('a','6')}</td>
+                    <td className="squareBlack" id="17" onClick={(e)=>this.click(['b','6'])}>{this.getPiece('b','6')}</td>
+                    <td className="squareWhite" id="18" onClick={(e)=>this.click(['c','6'])}>{this.getPiece('c','6')}</td>
+                    <td className="squareBlack" id="19" onClick={(e)=>this.click(['d','6'])}>{this.getPiece('d','6')}</td>
+                    <td className="squareWhite" id="20" onClick={(e)=>this.click(['e','6'])}>{this.getPiece('e','6')}</td>
+                    <td className="squareBlack" id="21" onClick={(e)=>this.click(['f','6'])}>{this.getPiece('f','6')}</td>
+                    <td className="squareWhite" id="22" onClick={(e)=>this.click(['g','6'])}>{this.getPiece('g','6')}</td>
+                    <td className="squareBlack" id="23" onClick={(e)=>this.click(['h','6'])}>{this.getPiece('h','6')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareBlack" id="24" onClick={(e)=>this.click(['a','5'])}>{this.getPiece('a','5')}</td>
+                    <td className="squareWhite" id="25" onClick={(e)=>this.click(['b','5'])}>{this.getPiece('b','5')}</td>
+                    <td className="squareBlack" id="26" onClick={(e)=>this.click(['c','5'])}>{this.getPiece('c','5')}</td>
+                    <td className="squareWhite" id="27" onClick={(e)=>this.click(['d','5'])}>{this.getPiece('d','5')}</td>
+                    <td className="squareBlack" id="28" onClick={(e)=>this.click(['e','5'])}>{this.getPiece('e','5')}</td>
+                    <td className="squareWhite" id="29" onClick={(e)=>this.click(['f','5'])}>{this.getPiece('f','5')}</td>
+                    <td className="squareBlack" id="30" onClick={(e)=>this.click(['g','5'])}>{this.getPiece('g','5')}</td>
+                    <td className="squareWhite" id="31" onClick={(e)=>this.click(['h','5'])}>{this.getPiece('h','5')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareWhite" id="32" onClick={(e)=>this.click(['a','4'])}>{this.getPiece('a','4')}</td>
+                    <td className="squareBlack" id="33" onClick={(e)=>this.click(['b','4'])}>{this.getPiece('b','4')}</td>
+                    <td className="squareWhite" id="34" onClick={(e)=>this.click(['c','4'])}>{this.getPiece('c','4')}</td>
+                    <td className="squareBlack" id="35" onClick={(e)=>this.click(['d','4'])}>{this.getPiece('d','4')}</td>
+                    <td className="squareWhite" id="36" onClick={(e)=>this.click(['e','4'])}>{this.getPiece('e','4')}</td>
+                    <td className="squareBlack" id="37" onClick={(e)=>this.click(['f','4'])}>{this.getPiece('f','4')}</td>
+                    <td className="squareWhite" id="38" onClick={(e)=>this.click(['g','4'])}>{this.getPiece('g','4')}</td>
+                    <td className="squareBlack" id="39" onClick={(e)=>this.click(['h','4'])}>{this.getPiece('h','4')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareBlack" id="40" onClick={(e)=>this.click(['a','3'])}>{this.getPiece('a','3')}</td>
+                    <td className="squareWhite" id="41" onClick={(e)=>this.click(['b','3'])}>{this.getPiece('b','3')}</td>
+                    <td className="squareBlack" id="42" onClick={(e)=>this.click(['c','3'])}>{this.getPiece('c','3')}</td>
+                    <td className="squareWhite" id="43" onClick={(e)=>this.click(['d','3'])}>{this.getPiece('d','3')}</td>
+                    <td className="squareBlack" id="44" onClick={(e)=>this.click(['e','3'])}>{this.getPiece('e','3')}</td>
+                    <td className="squareWhite" id="45" onClick={(e)=>this.click(['f','3'])}>{this.getPiece('f','3')}</td>
+                    <td className="squareBlack" id="46" onClick={(e)=>this.click(['g','3'])}>{this.getPiece('g','3')}</td>
+                    <td className="squareWhite" id="47" onClick={(e)=>this.click(['h','3'])}>{this.getPiece('h','3')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareWhite" id="48" onClick={(e)=>this.click(['a','2'])}>{this.getPiece('a','2')}</td>
+                    <td className="squareBlack" id="49" onClick={(e)=>this.click(['b','2'])}>{this.getPiece('b','2')}</td>
+                    <td className="squareWhite" id="50" onClick={(e)=>this.click(['c','2'])}>{this.getPiece('c','2')}</td>
+                    <td className="squareBlack" id="51" onClick={(e)=>this.click(['d','2'])}>{this.getPiece('d','2')}</td>
+                    <td className="squareWhite" id="52" onClick={(e)=>this.click(['e','2'])}>{this.getPiece('e','2')}</td>
+                    <td className="squareBlack" id="53" onClick={(e)=>this.click(['f','2'])}>{this.getPiece('f','2')}</td>
+                    <td className="squareWhite" id="54" onClick={(e)=>this.click(['g','2'])}>{this.getPiece('g','2')}</td>
+                    <td className="squareBlack" id="55" onClick={(e)=>this.click(['h','2'])}>{this.getPiece('h','2')}</td>
+                </tr>
+                <tr className="chessRow">
+                    <td className="squareBlack" id="56" onClick={(e)=>this.click(['a','1'])}>{this.getPiece('a','1')}</td>
+                    <td className="squareWhite" id="57" onClick={(e)=>this.click(['b','1'])}>{this.getPiece('b','1')}</td>
+                    <td className="squareBlack" id="58" onClick={(e)=>this.click(['c','1'])}>{this.getPiece('c','1')}</td>
+                    <td className="squareWhite" id="59" onClick={(e)=>this.click(['d','1'])}>{this.getPiece('d','1')}</td>
+                    <td className="squareBlack" id="60" onClick={(e)=>this.click(['e','1'])}>{this.getPiece('e','1')}</td>
+                    <td className="squareWhite" id="61" onClick={(e)=>this.click(['f','1'])}>{this.getPiece('f','1')}</td>
+                    <td className="squareBlack" id="62" onClick={(e)=>this.click(['g','1'])}>{this.getPiece('g','1')}</td>
+                    <td className="squareWhite" id="63" onClick={(e)=>this.click(['h','1'])}>{this.getPiece('h','1')}</td>
+                </tr>
+                </tbody>
+            </table>
+            </CardContent>
+        </Card>
         )
     }
 }

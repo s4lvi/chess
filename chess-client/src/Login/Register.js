@@ -48,7 +48,18 @@ class Register extends React.Component {
     
     register() {
         if (this.validate()) {
-            console.log("valid")
+            let body = {
+                username: this.state.username,
+                email: this.state.email,
+                password: this.state.password
+            };
+            let url = "https://hbha3ydgk5.execute-api.us-east-2.amazonaws.com/prod/register";
+            fetch(url, {
+                method:'POST',
+                body: JSON.stringify(body)
+            }).then((res) => res.json()).then((data) => {
+                console.log(data)
+            })
         } 
     }
 
@@ -63,13 +74,14 @@ class Register extends React.Component {
     render() {
         return(
         <React.Fragment>
-            <Card sx={{width: 200, backgroundColor: "#f8f1e3"}} variant="outlined">
+            <Card sx={{width: 300, backgroundColor: "#f8f1e3"}} variant="outlined">
+                    <p>Registration</p>
                 <CardContent>
-                    <TextField sx={{backgroundColor: "white"}} error={this.state.errors[0]} required variant="outlined" label="email" value={this.state.email ? this.state.email : ""} onChange={(e) => this.setState({email: e.target.value})} /><br/>
-                    <TextField sx={{backgroundColor: "white"}} error={this.state.errors[1]} required variant="outlined" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} /><br/>
-                    <TextField sx={{backgroundColor: "white"}} error={this.state.errors[2]} required variant="outlined" type="password" label="password" value={this.state.password ? this.state.password : ""} onChange={(e) => this.setState({password: e.target.value})} /><br/>
+                    <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[0]} required variant="outlined" label="email" value={this.state.email ? this.state.email : ""} onChange={(e) => this.setState({email: e.target.value})} /><br/>
+                    <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[1]} required variant="outlined" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} /><br/>
+                    <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[2]} required variant="outlined" type="password" label="password" value={this.state.password ? this.state.password : ""} onChange={(e) => this.setState({password: e.target.value})} /><br/>
                     {this.state.errorMsg}<br/>
-                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.register()} >Register</Button>
+                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.register()} >Submit</Button>
                 </CardContent>
             </Card>
         </React.Fragment>
