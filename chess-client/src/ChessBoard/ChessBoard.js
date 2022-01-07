@@ -234,10 +234,10 @@ class ChessBoard extends React.Component {
             <Stack spacing={2} direction="row">
                 <TextField id="standard-basic" label="display name" value={this.state.playerId ? this.state.playerId : ""} onChange={(e) => this.setState({playerId: e.target.value})} variant="standard" />
                 { this.state.connected === false &&
-                    <Button variant="contained" onClick={() => this.connect()} >Connect</Button>
+                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.connect()} >Connect</Button>
                 }
                 <TextField id="standard-basic" label="match id" value={this.state.matchId ? this.state.matchId : ""} onChange={(e) => this.setState({matchId: e.target.value})} variant="standard" />
-                <Button variant="contained" onClick={() => this.join()} >Join</Button>
+                <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.join()} >Join</Button>
             </Stack>
             <table className="chessBoard">
             <tbody>
