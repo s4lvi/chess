@@ -107,7 +107,7 @@ class Game extends React.Component {
         if (data["login"]) {
             if (data["login"] === true) {
                 this.setState({connected: true, currentView: 'browse'})
-            } else {
+            } if (data["login"] === false) {
                 this.setState({loginErr: "Invalid username/password"})
             }
         }
