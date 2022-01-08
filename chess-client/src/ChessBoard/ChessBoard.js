@@ -165,8 +165,8 @@ class ChessBoard extends React.Component {
     }
 
     render() {
-        let blackDead = this.state.dead[0].map(d => {return <img src={getImageForPiece(d,'white')} width='12px' alt={d}/>})
-        let whiteDead = this.state.dead[1].map(d => {return <img src={getImageForPiece(d,'black')} width='12px' alt={d}/>})
+        let blackDead = this.state.dead[0].map(d => {return <img className="deadPiece" src={getImageForPiece(d,'white')} alt={d}/>})
+        let whiteDead = this.state.dead[1].map(d => {return <img className="deadPiece" src={getImageForPiece(d,'black')} alt={d}/>})
         const bannerText = this.state.opponentId ? this.state.playerId + " vs " + this.state.opponentId : this.state.playerId + "'s open match"
 
         return(
