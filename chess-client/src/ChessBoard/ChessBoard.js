@@ -1,9 +1,6 @@
 import * as React from "react"
 import {ChessPiece, getImageForPiece} from "../ChessPiece/ChessPiece";
 import {validateMove} from "./ValidMoves";
-import TextField from '@mui/material/TextField';
-import { Button } from "@mui/material";
-import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SocketClient from "../SocketClient/SocketClient";
@@ -11,56 +8,28 @@ import SocketClient from "../SocketClient/SocketClient";
 class ChessBoard extends React.Component {
     constructor(props) {
         super(props);
-        let board = {'a':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]},
-        'b':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
-        'c':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
-        'd':{'1':["white","king"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","king"]},
-        'e':{'1':["white","queen"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","queen"]},
-        'f':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
-        'g':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
-        'h':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]}
-        }
-        let playerId = "player-"+Math.floor(Math.random() * 9999);
         this.state = {
-            board: board,
-            matchId: props.matchId ? props.matchId : "",
-            player: props.color ? props.color : 'white',
-            turn: props.turn ? props.turn : playerId,
-            playerId: props.playerId ? props.playerId : playerId,
+            board: props.board,
+            matchId: props.matchId,
+            player: props.playerColor,
+            turn: props.turn,
+            playerId: props.playerId,
             opponentId: props.opponentId ? props.opponentId : null,
             firstClick:null,
             secondClick:null,
             showMoves:false,
             showHint:false,
             moves: [],
-            dead: props.dead ? props.dead : [[],[]],
+            dead: props.dead,
             connected: false
         }
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
         this.pieceMove = this.pieceMove.bind(this);
-        this.client = null;
-        this.handleMessage = this.handleMessage.bind(this);
-        this.connect = this.connect.bind(this);
     }
 
-    connect() {
-        this.client = new SocketClient(this.state.playerId, this.handleMessage)
-        this.setState({connected: true})
-    }
-
-    join() {
-        let message = {
-            "action":"joinMatch",
-            "message":{
-                "player":this.state.playerId
-            }
-        }
-        if (this.state.matchId !== "") {
-            message["message"]["matchId"] = this.state.matchId;
-        }
-        console.log("joining with ", message)
-        this.client.client.send(JSON.stringify(message))
+    componentWillReceiveProps(nextProps) {
+        this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor})
     }
 
     sendMove(board) {
@@ -72,37 +41,7 @@ class ChessBoard extends React.Component {
                 "player":this.state.playerId,
                 "dead":this.state.dead}
         }
-        this.client.client.send(JSON.stringify(message))
-    }
-
-    handleMessage(m) {
-        let data = JSON.parse(m.data);
-        if (data["newMatchId"] !== null) {
-            this.setState({matchId:data.newMatchId});
-        }
-        if (data["players"]) {
-            let playerIndex = this.state.playerId === data["players"][0] ? 0 : 1;
-            let opponentIndex = playerIndex === 1 ? 0 : 1;
-            let playerColor = playerIndex === 1 ? "black" : "white"
-            let boardParsed = JSON.parse(data["board"])
-            this.setState({matchId:data["matchId"],opponentId:data["players"][opponentIndex],board:boardParsed,dead:data["dead"],turn:data["turn"],player:playerColor});
-        }
-    }
-
-    generateUUID() { // Public Domain/MIT
-        var d = new Date().getTime();//Timestamp
-        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16;//random number between 0 and 16
-            if(d > 0){//Use timestamp until depleted
-                r = (d + r)%16 | 0;
-                d = Math.floor(d/16);
-            } else {//Use microseconds since page-load if supported
-                r = (d2 + r)%16 | 0;
-                d2 = Math.floor(d2/16);
-            }
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
+        this.props.sendMove(message)
     }
 
     packageBoard(board) {

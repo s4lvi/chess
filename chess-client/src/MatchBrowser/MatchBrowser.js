@@ -11,6 +11,7 @@ class MatchBrowser extends React.Component {
             matches: [],
         }
         this.refresh = this.refresh.bind(this)
+        this.refresh();
     }
 
     refresh() {
@@ -28,19 +29,19 @@ class MatchBrowser extends React.Component {
         })
     }
 
-    join(m) {
-        console.log(m);
+    join(t, m) {
+        this.props.join(t, m);
     }
 
     startNew() {
-        console.log('new')
+        this.props.join("new")
     }
 
     
     render() {
         let matchList = []
         this.state.matches.forEach((m,i) => {
-            matchList.push(<Button sx={{borderColor: "#77604a", width:"80%", margin: 1, fontSize:"80%"}} variant="outlined" onClick={() => this.join(m[0])} >{m[1] + "'s match"}</Button>);
+            matchList.push(<Button sx={{borderColor: "#77604a", width:"80%", margin: 1, fontSize:"80%"}} variant="outlined" onClick={() => this.join("join", m[0])} >{m[1] + "'s match"}</Button>);
         })
         return(
             <React.Fragment>

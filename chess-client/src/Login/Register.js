@@ -53,13 +53,7 @@ class Register extends React.Component {
                 email: this.state.email,
                 password: this.state.password
             };
-            let url = "https://hbha3ydgk5.execute-api.us-east-2.amazonaws.com/prod/register";
-            fetch(url, {
-                method:'POST',
-                body: JSON.stringify(body)
-            }).then((res) => res.json()).then((data) => {
-                console.log(data)
-            })
+            this.props.register(body);
         } 
     }
 
