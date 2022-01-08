@@ -104,10 +104,10 @@ class Game extends React.Component {
             let boardParsed = JSON.parse(data["board"])
             this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor});
         }
-        if (data["login"]) {
+        if (data["login"] !== undefined && data["login"] !== null) {
             if (data["login"] === true) {
                 this.setState({connected: true, currentView: 'browse'})
-            } if (data["login"] === false) {
+            } else {
                 this.setState({loginErr: "Invalid username/password"})
             }
         }
