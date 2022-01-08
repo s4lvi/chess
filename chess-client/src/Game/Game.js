@@ -67,7 +67,7 @@ class Game extends React.Component {
     }
 
     handleLogin(e) {
-        this.setState({username: e.username}, () => {
+        this.setState({username: e.username, password: e.password}, () => {
             let message = {
                 "action":"validateLogin",
                 "message":{

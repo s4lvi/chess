@@ -12,13 +12,13 @@ class Login extends React.Component {
             password: "",
             uErr: false,
             pErr: false,
-            err: props.err
+            err: null
         }
         this.login = this.login.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({err:nextProps.err})
+        this.setState({err:nextProps.loginErr});
     }
 
     login() {
@@ -40,7 +40,7 @@ class Login extends React.Component {
             <React.Fragment>
             <Card sx={{width: 300, backgroundColor: "#f8f1e3"}} variant="outlined">
                 <CardContent>
-                { this.state.err && <p style={{color:"red"}}>Invalid username/email</p>}
+                { this.state.err !== null && <p style={{color:"red"}}>Invalid username/email</p>}
                 <TextField error={this.state.uErr} required sx={{backgroundColor: "white", margin:1}} id="username" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} variant="outlined" />
                 <TextField error={this.state.pErr} required sx={{backgroundColor: "white", margin:1}} type="password" id="password" label="password" value={this.state.password ? this.state.password : ""} onChange={(e) => this.setState({password: e.target.value})} variant="outlined" />
                 <Button sx={{backgroundColor: "#423121", marginRight:1}} variant="contained" onClick={() => this.login()} >Login</Button>
