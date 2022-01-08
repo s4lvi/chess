@@ -12,16 +12,74 @@
   height: 100vh;
   font-size: 80%;
 }
-
+@media only screen and (min-width: 1200px) {
+  .chessBoard {
+    border: 8px solid #25190e;
+    width:80vh;
+    height:80vh;
+    background-color: #77604a;
+  }
+  
+  .chessRow {
+    width:80vh;
+  }
+  
+  .infoRow {
+    color: white;
+    background-color: #25190e;
+  }
+  
+  .squareBlack {
+    height: 10vh;
+    width: 10vh;
+    max-height: 10vh;
+    max-width: 10vh;
+    min-height: 10vh;
+    min-width: 10vh;
+    background-color:#423121;
+  }
+  
+  .squareWhite {
+    height: 10vh;
+    width: 10vh; 
+    max-height: 10vh;
+    max-width: 10vh;
+    min-height: 10vh;
+    min-width: 10vh;
+    background-color:#f8f1e3;
+  }
+  
+  .chessBoard img {
+    width: 7vh;
+    filter: drop-shadow(2px 2px 2px rgb(0, 0, 0));
+  }
+  
+  .deadPiece {
+    width: 2vh !important;
+  }
+  
+  .chessPieceActive {
+  }
+  
+  .chessPieceActive img {
+    width: 9.5vh;
+  }
+  
+  .rotater {
+    width: 12vh;
+    animation: rotation 2s infinite linear;
+  }
+}
+@media only screen and (max-width: 1200px) {
 .chessBoard {
   border: 8px solid #25190e;
-  width:80vh;
-  height:80vh;
+  width:80vw;
+  height:80vw;
   background-color: #77604a;
 }
 
 .chessRow {
-  width:80vh;
+  width:80vw;
 }
 
 .infoRow {
@@ -30,44 +88,45 @@
 }
 
 .squareBlack {
-  height: 10vh;
-  width: 10vh;
-  max-height: 10vh;
-  max-width: 10vh;
-  min-height: 10vh;
-  min-width: 10vh;
+  height: 10vw;
+  width: 10vw;
+  max-height: 10vw;
+  max-width: 10vw;
+  min-height: 10vw;
+  min-width: 10vw;
   background-color:#423121;
 }
 
 .squareWhite {
-  height: 10vh;
-  width: 10vh; 
-  max-height: 10vh;
-  max-width: 10vh;
-  min-height: 10vh;
-  min-width: 10vh;
+  height: 10vw;
+  width: 10vw; 
+  max-height: 10vw;
+  max-width: 10vw;
+  min-height: 10vw;
+  min-width: 10vw;
   background-color:#f8f1e3;
 }
 
 .chessBoard img {
-  width: 7vh;
+  width: 7vw;
   filter: drop-shadow(2px 2px 2px rgb(0, 0, 0));
 }
 
 .deadPiece {
-  width: 2vh !important;
+  width: 2vw !important;
 }
 
 .chessPieceActive {
 }
 
 .chessPieceActive img {
-  width: 9.5vh;
+  width: 9.5vw;
 }
 
 .rotater {
-  width: 12vh;
+  width: 12vw;
   animation: rotation 2s infinite linear;
+}
 }
 
 @keyframes rotation {
