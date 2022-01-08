@@ -11,6 +11,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             currentView: "login",
+            loginErr: null,
             username: null,
             matchId: null,
             connected: false,
@@ -39,6 +40,10 @@ class Game extends React.Component {
         this.client = null;
     }
 
+    componentDidMount() {
+        this.connect();
+    }
+
     join(type, matchId) {
         let message = {
             "action":"joinMatch",
@@ -54,8 +59,7 @@ class Game extends React.Component {
     }
 
     connect() {
-        this.client = new SocketClient(this.state.username, this.handleMessage)
-        this.setState({connected: true})
+        this.client = new SocketClient(this.handleMessage)
     }
 
     switchView(page) {
@@ -63,8 +67,16 @@ class Game extends React.Component {
     }
 
     handleLogin(e) {
-        this.setState({username: e.username}, () => this.connect())
-        this.switchView('browse')
+        this.setState({username: e.username}, () => {
+            let message = {
+                "action":"validateLogin",
+                "message":{
+                    "userId":this.state.username,
+                    "password":this.state.password
+                }
+            }
+            this.client.client.send(JSON.stringify(message))
+        })
     }
 
     handleRegister(e) {
@@ -92,6 +104,13 @@ class Game extends React.Component {
             let boardParsed = JSON.parse(data["board"])
             this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor});
         }
+        if (data["login"]) {
+            if (data["login"] === true) {
+                this.setState({connected: true, currentView: 'browse'})
+            } else {
+                this.setState({loginErr: "Invalid username/password"})
+            }
+        }
     }
 
     sendMove(move) {
@@ -101,8 +120,8 @@ class Game extends React.Component {
     render() {
         return(
             <div className="GameContainer">
-                { this.state.currentView === "login" && <Login login={this.handleLogin} register={() => this.switchView('register')} /> }
-                { this.state.currentView === "register" && <Register register={this.handleRegister} /> }
+                { this.state.currentView === "login" && <Login err={this.state.loginErr} login={this.handleLogin} register={() => this.switchView('register')} /> }
+                { this.state.currentView === "register" && <Register register={this.handleRegister} back={() => this.switchView('login')} /> }
                 { this.state.currentView === "browse" && <MatchBrowser join={this.join} /> }
                 { this.state.currentView === "waiting" && 
                 <div>

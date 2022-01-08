@@ -57,6 +57,10 @@ class Register extends React.Component {
         } 
     }
 
+    back() {
+        this.props.back();
+    }
+
     validateEmail(email) {
         return String(email)
           .toLowerCase()
@@ -75,7 +79,8 @@ class Register extends React.Component {
                     <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[1]} required variant="outlined" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} /><br/>
                     <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[2]} required variant="outlined" type="password" label="password" value={this.state.password ? this.state.password : ""} onChange={(e) => this.setState({password: e.target.value})} /><br/>
                     {this.state.errorMsg}<br/>
-                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.register()} >Submit</Button>
+                    <Button sx={{marginRight:1, backgroundColor: "#423121"}} variant="contained" onClick={() => this.register()} >Submit</Button>
+                    <Button sx={{backgroundColor: "#423121"}} variant="contained" onClick={() => this.back()} >Back</Button>
                 </CardContent>
             </Card>
         </React.Fragment>

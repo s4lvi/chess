@@ -2,8 +2,7 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 
 class SocketClient {
-    constructor(name, fn) {
-        this.name = name;
+    constructor(fn) {
         console.log('connecting to websocket')
         this.client = new W3CWebSocket('wss://8itl1gx5zc.execute-api.us-east-2.amazonaws.com/production?apiKey=nMTbkWTdaT1Hz2X6NZklu5LDC579OWz4XqBp8Mrc');
         this.client.onopen = (e) => {
