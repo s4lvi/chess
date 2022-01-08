@@ -4,6 +4,7 @@ import MatchBrowser from '../MatchBrowser/MatchBrowser';
 import Login from '../Login/Login';
 import Register from '../Login/Register';
 import SocketClient from "../SocketClient/SocketClient";
+const rookImg = require('../images/rookW.png');
 
 class Game extends React.Component {
     constructor(props) {
@@ -103,7 +104,11 @@ class Game extends React.Component {
                 { this.state.currentView === "login" && <Login login={this.handleLogin} register={() => this.switchView('register')} /> }
                 { this.state.currentView === "register" && <Register register={this.handleRegister} /> }
                 { this.state.currentView === "browse" && <MatchBrowser join={this.join} /> }
-                { this.state.currentView === "waiting" && <h2>Waiting for player to join...</h2>}
+                { this.state.currentView === "waiting" && 
+                <div>
+                    <h2>Waiting for player to join...</h2>
+                    <img className="rotater" src={rookImg} alt="pawn" />
+                </div>}
                 { this.state.currentView === "play" && <ChessBoard sendMove={this.sendMove} playerId={this.state.username} board={this.state.board}
                 matchId={this.state.matchId} opponentId={this.state.opponentId} turn={this.state.turn} dead={this.state.dead} playerColor={this.state.playerColor} /> }
             </div>
