@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ChessPiece, getImageForPiece} from "../ChessPiece/ChessPiece";
-import {validateMove} from "./ValidMoves";
+import {validateMove, isKingCheck} from "./ValidMoves";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SocketClient from "../SocketClient/SocketClient";
@@ -21,7 +21,8 @@ class ChessBoard extends React.Component {
             showHint:false,
             moves: [],
             dead: props.dead,
-            connected: false
+            connected: false,
+            notify: props.notify
         }
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
@@ -29,7 +30,12 @@ class ChessBoard extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor})
+        this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,
+            dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor,notify:nextProps.notify}, () => {
+                let notify = isKingCheck(nextProps.board, this.state.player) ? this.state.player + "'s king is in check" : null;
+                console.log(notify);
+                this.setState({notify:notify});
+            })
     }
 
     sendMove(board) {
@@ -39,7 +45,8 @@ class ChessBoard extends React.Component {
                 "matchId":this.state.matchId, 
                 "board":JSON.stringify(this.state.board),
                 "player":this.state.playerId,
-                "dead":this.state.dead}
+                "dead":this.state.dead,
+                "notify":this.state.notify}
         }
         this.props.sendMove(message)
     }
@@ -127,6 +134,9 @@ class ChessBoard extends React.Component {
                 }
                 newBoard[from[0]][from[1]] = null;
                 newBoard[to[0]][to[1]] = null;
+                if (piece1[1] === 'pawn' && (to[1] === "1" || to[1] === "8")) { // pawn promotion
+                    piece1[1] = 'queen';
+                }
                 this.setState({board: newBoard}, ()=>{
                     newBoard[to[0]][to[1]] = piece1;
                     let move = [this.state.player,piece1Ref[1],to[0],to[1]]  
@@ -167,8 +177,10 @@ class ChessBoard extends React.Component {
     render() {
         let blackDead = this.state.dead[0].map(d => {return <img className="deadPiece" src={getImageForPiece(d,'white')} alt={d}/>})
         let whiteDead = this.state.dead[1].map(d => {return <img className="deadPiece" src={getImageForPiece(d,'black')} alt={d}/>})
-        const bannerText = this.state.opponentId ? this.state.playerId + " vs " + this.state.opponentId : this.state.playerId + "'s open match"
-
+        let bannerText = this.state.opponentId ? this.state.playerId + " vs " + this.state.opponentId : this.state.playerId + "'s open match"
+        if (this.state.notify) {
+            bannerText = bannerText + " | " + this.state.notify;
+        }
         return(
             
             <Card sx={{backgroundColor: "#f8f1e3"}} variant="outlined">

@@ -16,18 +16,19 @@ class Game extends React.Component {
             matchId: null,
             connected: false,
             opponentId: null,
-            board: {'a':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]},
-            'b':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
-            'c':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
-            'd':{'1':["white","king"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","king"]},
-            'e':{'1':["white","queen"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","queen"]},
-            'f':{'1':["white","bishop"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","bishop"]},
-            'g':{'1':["white","night"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","night"]},
-            'h':{'1':["white","rook"],'2':["white","pawn"],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn"],'8':["black","rook"]}
+            board: {'a':{'1':["white","rook",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","rook",false,false]},
+            'b':{'1':["white","night",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","night",false,false]},
+            'c':{'1':["white","bishop",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","bishop",false,false]},
+            'd':{'1':["white","king",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","king",false,false]},
+            'e':{'1':["white","queen",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","queen",false,false]},
+            'f':{'1':["white","bishop",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","bishop",false,false]},
+            'g':{'1':["white","night",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","night",false,false]},
+            'h':{'1':["white","rook",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","rook",false,false]}
             },
             dead: null,
             turn: null,
-            player: null
+            player: null,
+            notify: null
         }
 
         this.switchView = this.switchView.bind(this);
@@ -102,7 +103,8 @@ class Game extends React.Component {
             let opponentIndex = playerIndex === 1 ? 0 : 1;
             let playerColor = playerIndex === 1 ? "black" : "white"
             let boardParsed = JSON.parse(data["board"])
-            this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor});
+            this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],
+                board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor,notify:data["notify"]});
         }
         if (data["login"] !== undefined && data["login"] !== null) {
             if (data["login"] === true) {
@@ -128,7 +130,7 @@ class Game extends React.Component {
                     <h2>Waiting for player to join...</h2>
                     <img className="rotater" src={rookImg} alt="pawn" />
                 </div>}
-                { this.state.currentView === "play" && <ChessBoard sendMove={this.sendMove} playerId={this.state.username} board={this.state.board}
+                { this.state.currentView === "play" && <ChessBoard sendMove={this.sendMove} playerId={this.state.username} board={this.state.board} notify={this.state.notify}
                 matchId={this.state.matchId} opponentId={this.state.opponentId} turn={this.state.turn} dead={this.state.dead} playerColor={this.state.playerColor} /> }
             </div>
         )

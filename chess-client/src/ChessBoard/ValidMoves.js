@@ -149,13 +149,29 @@ function isPawnMove(from, to, board, color) {
         if (((getCol(from[0], dir, 0) === to[0]) && (getRow(from[1], dir, 2) === to[1])) 
             && piece1 === null && piece2 === null) return true;
     }
-    // check diagonals if enemy is in square
-    let diagRight = [getCol(from[0], 1, 1),getRow(from[1], dir, 1)]
-    let diagLeft = [getCol(from[0], -1, 1),getRow(from[1], dir, 1)]
-    if (diagRight[0] === to[0] && diagRight[1] === to[1] 
-        && board[diagRight[0]][diagRight[1]] !== null && board[diagRight[0]][diagRight[1]][0] !== color) return true
-    if (diagLeft[0] === to[0] && diagLeft[1] === to[1] 
-        && board[diagLeft[0]][diagLeft[1]] !== null && board[diagLeft[0]][diagLeft[1]][0] !== color) return true
+    if (from[0] !== to[0]) { // if making a capture move
+        // check diagonals if enemy is in square
+        let diagRight = [getCol(from[0], 1, 1),getRow(from[1], dir, 1)]
+        let diagLeft = [getCol(from[0], -1, 1),getRow(from[1], dir, 1)]
+        if (diagRight[0] === to[0] && diagRight[1] === to[1] 
+            && board[diagRight[0]][diagRight[1]] !== null && board[diagRight[0]][diagRight[1]][0] !== color) return true
+        if (diagLeft[0] === to[0] && diagLeft[1] === to[1] 
+            && board[diagLeft[0]][diagLeft[1]] !== null && board[diagLeft[0]][diagLeft[1]][0] !== color) return true
+        // check en-passant capture
+        if ((from[1] === '5' && color === "white") || (from[1] === '4' && color === "black")) { // if the piece is starting in the right row
+            let diagRight = [getCol(from[0], 1, 1),getRow(from[1], dir, 1)]
+            let diagLeft = [getCol(from[0], -1, 1),getRow(from[1], dir, 1)]
+            let right = [getCol(from[0], 1, 1),from[1]]
+            let left = [getCol(from[0], -1, 1),from[1]]
+            if (diagRight[0] === to[0] && diagRight[1] === to[1] && board[diagRight[0]][diagRight[1]] === null // check moving to diagonal and its empty
+                && board[right[0]][right[1]][0] !== null && board[right[0]][right[1]][0] !== color // check theres a piece to that side and its not your piece
+                && board[right[0]][right[1]][1] === 'pawn' && board[right[0]][right[1]][3] === true) return true // check that piece is a pawn and it has made a jump
+            if (diagLeft[0] === to[0] && diagLeft[1] === to[1] && board[diagLeft[0]][diagLeft[1]] === null 
+                && board[left[0]][left[1]] !== null && board[left[0]][left[1]][0] !== color
+                && board[left[0]][left[1]][1] === 'pawn' && board[left[0]][left[1]][3] === true) return true
+        }
+    }
+    
     return false;
 }
 function isKnightMove(from, to, board, color) {
@@ -237,7 +253,7 @@ function isKingMove(from, to, board, color) {
     return false;
 }
 
-function isKingCheck(board, color) {
+export function isKingCheck(board, color) {
     let pieces = generatePieceDict(board);
     if (color === 'white') {
         for (let k of Object.keys(pieces['black'])) {
