@@ -73,7 +73,7 @@ class Register extends React.Component {
         return(
         <React.Fragment>
             <Card sx={{width: 300, backgroundColor: "#f8f1e3"}} variant="outlined">
-                    <p>Registration</p>
+                    <p><b>Registration</b></p>
                 <CardContent>
                     <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[0]} required variant="outlined" label="email" value={this.state.email ? this.state.email : ""} onChange={(e) => this.setState({email: e.target.value})} /><br/>
                     <TextField sx={{backgroundColor: "white", margin:1}} error={this.state.errors[1]} required variant="outlined" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} /><br/>

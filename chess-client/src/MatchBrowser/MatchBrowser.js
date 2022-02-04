@@ -46,7 +46,7 @@ class MatchBrowser extends React.Component {
         return(
             <React.Fragment>
                 <Card sx={{width: 300, backgroundColor: "#f8f1e3"}} variant="outlined">
-                    <p>Open Matches: </p>
+                    <p><b>Open Matches: </b></p>
                     <CardContent>
                             {matchList}
                         <Button sx={{marginRight:1,backgroundColor: "#423121"}} variant="contained" onClick={() => this.refresh()} >Refresh</Button>

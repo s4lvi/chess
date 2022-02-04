@@ -164,7 +164,7 @@ function isPawnMove(from, to, board, color) {
             let right = [getCol(from[0], 1, 1),from[1]]
             let left = [getCol(from[0], -1, 1),from[1]]
             if (diagRight[0] === to[0] && diagRight[1] === to[1] && board[diagRight[0]][diagRight[1]] === null // check moving to diagonal and its empty
-                && board[right[0]][right[1]][0] !== null && board[right[0]][right[1]][0] !== color // check theres a piece to that side and its not your piece
+                && board[right[0]][right[1]] !== null && board[right[0]][right[1]][0] !== color // check theres a piece to that side and its not your piece
                 && board[right[0]][right[1]][1] === 'pawn' && board[right[0]][right[1]][3] === true) return true // check that piece is a pawn and it has made a jump
             if (diagLeft[0] === to[0] && diagLeft[1] === to[1] && board[diagLeft[0]][diagLeft[1]] === null 
                 && board[left[0]][left[1]] !== null && board[left[0]][left[1]][0] !== color
@@ -244,6 +244,33 @@ function isQueenMove(from, to, board, color) {
 }
 function isKingMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
+    // castling 
+    if ((from[1] === to[1]) && ((to[0] === getCol(from[0],-1,2)) || (to[0] === getCol(from[0],1,2)))) {
+        // check if king has moved
+        if (board[from[0]][from[1]][3]) {
+            return false
+        }
+        // check if rook has moved
+        var row = color === 'white' ? 'a' : 'h'
+        if ((to[0] === getCol(from[0],-1,2))) { // left rook
+            if (board[row]['1'][3]) {
+                return false
+            }
+            if (!isRookMove()) { // check if theres pieces in between
+                return false;
+            }
+        } else { // right rook
+            if (board[row]['8'][3]) {
+                return false
+            }
+            if (!isRookMove()) { // check if theres pieces in between
+                return false;
+            }
+        }
+
+        // check if king is in check
+    }
+    // normal moves
     for (let i = 1; i < 2; i++) {
         if (isMove([getCol(from[0],dir[0],i), getRow(from[1],dir[1],i)], to, board, color)) {
             return isEmptyOrEnemy(to, board, color);
@@ -268,6 +295,19 @@ export function isKingCheck(board, color) {
         for (let k of Object.keys(pieces['white'])) {
             for (let p of pieces['white'][k]) {
                 if (validateMove(board[p[0]][p[1]], p, pieces['black']['king'][0], board, false)) return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function isCheckmate(board, color) {
+    let pieces = generatePieceDict(board);
+    let oppositeColor = color === 'white' ? 'black' : 'white'
+    for (let k of Object.keys(pieces[color])) {
+        for (let p of pieces[color][k]) {
+            if (validateMove(board[p[0]][p[1]], p, pieces[oppositeColor]['king'][0], board, false)) {
+                return true;
             }
         }
     }

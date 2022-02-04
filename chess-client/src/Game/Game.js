@@ -1,6 +1,7 @@
 import * as React from "react"
 import ChessBoard from '../ChessBoard/ChessBoard';
 import MatchBrowser from '../MatchBrowser/MatchBrowser';
+import TopBar from "../TopBar/TopBar";
 import Login from '../Login/Login';
 import Register from '../Login/Register';
 import SocketClient from "../SocketClient/SocketClient";
@@ -122,6 +123,7 @@ class Game extends React.Component {
     render() {
         return(
             <div className="GameContainer">
+                <TopBar />
                 { this.state.currentView === "login" && <Login err={this.state.loginErr} login={this.handleLogin} register={() => this.switchView('register')} /> }
                 { this.state.currentView === "register" && <Register register={this.handleRegister} back={() => this.switchView('login')} /> }
                 { this.state.currentView === "browse" && <MatchBrowser join={this.join} /> }

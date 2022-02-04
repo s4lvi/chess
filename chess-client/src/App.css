@@ -12,6 +12,18 @@
   height: 100vh;
   font-size: 80%;
 }
+
+.TopBar {
+ position: absolute;
+ width: 100vw;
+ height: 32px;
+ top: 0;
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+ background-color: #f8f1e3;
+}
+
 @media only screen and (min-width: 1200px) {
   .chessBoard {
     border: 8px solid #25190e;
@@ -70,6 +82,7 @@
     animation: rotation 2s infinite linear;
   }
 }
+
 @media only screen and (max-width: 1200px) {
 .chessBoard {
   border: 8px solid #25190e;
@@ -129,11 +142,24 @@
 }
 }
 
+.wiggle {
+  animation: wiggle 0.5s infinite 1 alternate;
+}
+
 @keyframes rotation {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(359deg);
+  }
+}
+
+@keyframes wiggle {
+  from {
+    transform: rotate(-30deg);
+  }
+  to {
+    transform: rotate(30deg);
   }
 }

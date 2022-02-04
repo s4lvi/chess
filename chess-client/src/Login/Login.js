@@ -39,6 +39,7 @@ class Login extends React.Component {
         return(
             <React.Fragment>
             <Card sx={{width: 300, backgroundColor: "#f8f1e3"}} variant="outlined">
+                <p><b>Log in</b></p>
                 <CardContent>
                 { this.state.err && <p style={{color:"red"}}>Invalid username/email</p>}
                 <TextField error={this.state.uErr} required sx={{backgroundColor: "white", margin:1}} id="username" label="username" value={this.state.username ? this.state.username : ""} onChange={(e) => this.setState({username: e.target.value})} variant="outlined" />

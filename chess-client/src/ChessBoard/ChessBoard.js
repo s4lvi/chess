@@ -132,11 +132,20 @@ class ChessBoard extends React.Component {
                     }
                     this.setState({dead:newDead});
                 }
-                newBoard[from[0]][from[1]] = null;
-                newBoard[to[0]][to[1]] = null;
                 if (piece1[1] === 'pawn' && (to[1] === "1" || to[1] === "8")) { // pawn promotion
                     piece1[1] = 'queen';
                 }
+                if (piece1[1] === 'pawn' && ((from[1] === "2" && to[1] === "4") || (from[1] === "7" && to[1] === "5"))) { // pawn first move jump
+                    piece1[3] = true;
+                }
+                if (piece1[1] === 'pawn' && ((from[1] === '4') || (from[1] === '5')) && from[0] !== to[0] && newBoard[to[0]][to[1]] === null) { // en passant
+                    newBoard[to[0]][from[1]] = null;
+                }
+                if ((piece1[1] === 'king') && (!piece1[1][3])) { // set king moved flag true (for castling)
+                    piece1[3] = true;
+                }
+                newBoard[from[0]][from[1]] = null;
+                newBoard[to[0]][to[1]] = null;
                 this.setState({board: newBoard}, ()=>{
                     newBoard[to[0]][to[1]] = piece1;
                     let move = [this.state.player,piece1Ref[1],to[0],to[1]]  
