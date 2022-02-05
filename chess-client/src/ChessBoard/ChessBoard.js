@@ -38,7 +38,7 @@ class ChessBoard extends React.Component {
                 if (isKingCheck) {
                     let isCheckmate = isCheckmate(nextProps.board, this.state.player);
                     if (isCheckmate) {
-                        notify = "Checkmate! Player " + this.state.player === 'white' ? 'black' : 'white' + " wins.";
+                        notify = "Checkmate! " + (this.state.player === 'white' ? 'Black' : 'White') + " wins.";
                     }
                 }
                 this.setState({notify:notify});
