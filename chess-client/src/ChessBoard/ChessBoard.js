@@ -37,7 +37,7 @@ class ChessBoard extends React.Component {
                 this.setState({notify:notify});
             })
     }
-
+                       
     sendMove(board) {
         let message = {
             "action": "sendMove",
@@ -51,41 +51,11 @@ class ChessBoard extends React.Component {
         this.props.sendMove(message)
     }
 
-    packageBoard(board) {
-        let newboard = {};
-        for (let i of Object.keys(board)) {
-            newboard[i] = {}
-            for (let j of Object.keys(board[i])) {
-                if (board[i][j] !== null) {
-                    newboard[i][j] = [board[i][j].props.color, board[i][j].props.type, false]
-                } else {
-                    newboard[i][j] = null;
-                }
-            }
-        }
-        return newboard;
-    }
-
-    unpackageBoard(board) {
-        let newboard = {...board};
-        for (let i of Object.keys(board)) {
-            newboard[i] = {...board[i]}
-            for (let j of Object.keys(board[i])) {
-                if (board[i][j] !== null) {
-                    newboard[i][j] = <ChessPiece type={board[i][j][1]} color={board[i][j][0]} selected={board[i][j][2]} />
-                } else {
-                    newboard[i][j] = null;
-                }
-            }
-        }
-        return newboard;
-    }
-
     click(position) {
         if (this.state.firstClick !== null) {
             let newBoard = this.state.board;
             let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
-            let piece = [pieceRef[0],pieceRef[1],false]
+            let piece = [pieceRef[0],pieceRef[1],false,pieceRef[3]]
             this.setState({board: newBoard}, () => {
                 newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = piece;
                 this.setState({secondClick: position, board: newBoard}, () => {
@@ -141,12 +111,32 @@ class ChessBoard extends React.Component {
                 if (piece1[1] === 'pawn' && ((from[1] === '4') || (from[1] === '5')) && from[0] !== to[0] && newBoard[to[0]][to[1]] === null) { // en passant
                     newBoard[to[0]][from[1]] = null;
                 }
-                if ((piece1[1] === 'king') && (!piece1[1][3])) { // set king moved flag true (for castling)
+                var rookRef = null;
+                var castlingFlag = false;
+                console.log(piece1,piece1[1] === 'king',!piece1[3]);
+                if ((piece1[1] === 'king') && (!piece1[3])) { // set king moved flag true (for castling)
                     piece1[3] = true;
+                    console.log(to[0])
+                    if (to[0] === 'c' || to[0] === 'g') {
+                        console.log('castling')
+                        castlingFlag = true;
+                        var rookFrom = [to[0] === 'c' ? 'a' : 'h',piece1[0] === 'white' ? '1' : '8']
+                        var rookTo = [to[0] === 'c' ? 'd' : 'f',piece1[0] === 'white' ? '1' : '8']
+                        console.log("rook from ", rookFrom)
+                        console.log("rook to ", rookTo)
+                        rookRef = newBoard[rookFrom[0]][rookFrom[1]]
+                        newBoard[rookFrom[0]][rookFrom[1]] = null;
+                        newBoard[rookTo[0]][rookTo[1]] = null;
+                    }
                 }
                 newBoard[from[0]][from[1]] = null;
                 newBoard[to[0]][to[1]] = null;
                 this.setState({board: newBoard}, ()=>{
+                    if (castlingFlag) { // move rook for castling
+                        console.log('moving rook')
+                        var rookTo = [to[0] === 'c' ? 'd' : 'f',piece1[0] === 'white' ? '1' : '8']
+                        newBoard[rookTo[0]][rookTo[1]] = rookRef;
+                    }
                     newBoard[to[0]][to[1]] = piece1;
                     let move = [this.state.player,piece1Ref[1],to[0],to[1]]  
                     let moves = this.state.moves;

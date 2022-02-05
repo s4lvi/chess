@@ -244,31 +244,50 @@ function isQueenMove(from, to, board, color) {
 }
 function isKingMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
+
     // castling 
     if ((from[1] === to[1]) && ((to[0] === getCol(from[0],-1,2)) || (to[0] === getCol(from[0],1,2)))) {
+        console.log("attempting castling")
         // check if king has moved
         if (board[from[0]][from[1]][3]) {
+            console.log("king already moved")
             return false
         }
         // check if rook has moved
-        var row = color === 'white' ? 'a' : 'h'
+        var row = color === 'white' ? '1' : '8'
+        console.log("row ", row);
         if ((to[0] === getCol(from[0],-1,2))) { // left rook
-            if (board[row]['1'][3]) {
+            console.log("left rook")
+            if (board['a'][row][3]) {
+                console.log("rook already moved")
                 return false
             }
-            if (!isRookMove()) { // check if theres pieces in between
+            var rookFrom = ['a',row]
+            var rookTo = [getCol(from[0],-1,1), row]
+            if (!isRookMove(rookFrom, rookTo, board, color)) { // check if theres pieces in between
+                console.log("rook blocked")
                 return false;
             }
         } else { // right rook
-            if (board[row]['8'][3]) {
+            console.log("right rook")
+            if (board['h'][row][3]) {
+                console.log("rook already moved")
                 return false
             }
-            if (!isRookMove()) { // check if theres pieces in between
+            var rookFrom = ['h',row]
+            var rookTo = [getCol(from[0],1,1), row]
+            if (!isRookMove(rookFrom, rookTo, board, color)) { // check if theres pieces in between
+                console.log("rook blocked")
                 return false;
             }
         }
-
         // check if king is in check
+        if (isKingCheck(board, color)) {
+            console.log("king in check")
+            return false;
+        }
+        console.log("good castle")
+        return true;
     }
     // normal moves
     for (let i = 1; i < 2; i++) {

@@ -20,8 +20,8 @@ class Game extends React.Component {
             board: {'a':{'1':["white","rook",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","rook",false,false]},
             'b':{'1':["white","night",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","night",false,false]},
             'c':{'1':["white","bishop",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","bishop",false,false]},
-            'd':{'1':["white","king",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","king",false,false]},
-            'e':{'1':["white","queen",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","queen",false,false]},
+            'd':{'1':["white","queen",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","queen",false,false]},
+            'e':{'1':["white","king",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","king",false,false]},
             'f':{'1':["white","bishop",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","bishop",false,false]},
             'g':{'1':["white","night",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","night",false,false]},
             'h':{'1':["white","rook",false,false],'2':["white","pawn",false,false],'3':null,'4':null,'5':null,'6':null,'7':["black","pawn",false,false],'8':["black","rook",false,false]}
