@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ChessPiece, getImageForPiece} from "../ChessPiece/ChessPiece";
-import {validateMove, isKingCheck} from "./ValidMoves";
+import {validateMove, isKingCheck, isCheckmate} from "./ValidMoves";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SocketClient from "../SocketClient/SocketClient";
@@ -32,8 +32,15 @@ class ChessBoard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,
             dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor,notify:nextProps.notify}, () => {
-                let notify = isKingCheck(nextProps.board, this.state.player) ? this.state.player + "'s king is in check" : null;
+                let isKingCheck = isKingCheck(nextProps.board, this.state.player);
+                let notify = isKingCheck ? this.state.player + "'s king is in check" : null;
                 console.log(notify);
+                if (isKingCheck) {
+                    let isCheckmate = isCheckmate(nextProps.board, this.state.player);
+                    if (isCheckmate) {
+                        notify = "Checkmate! Player " + this.state.player === 'white' ? 'black' : 'white' + " wins.";
+                    }
+                }
                 this.setState({notify:notify});
             })
     }
@@ -145,7 +152,6 @@ class ChessBoard extends React.Component {
                                     moves: moves}, () => this.sendMove(newBoard))
                 });
             }
-            
             this.cancelClicks();
         }
     }

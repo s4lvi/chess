@@ -322,7 +322,7 @@ export function isKingCheck(board, color) {
 
 export function isCheckmate(board, color) {
     let pieces = generatePieceDict(board);
-    let oppositeColor = color === 'white' ? 'black' : 'white'
+    let oppositeColor = color === 'white' ? 'black' : 'white';
     for (let k of Object.keys(pieces[color])) {
         for (let p of pieces[color][k]) {
             if (validateMove(board[p[0]][p[1]], p, pieces[oppositeColor]['king'][0], board, false)) {
