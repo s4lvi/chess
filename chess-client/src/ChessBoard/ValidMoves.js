@@ -300,17 +300,46 @@ function isKingMove(from, to, board, color) {
 }
 
 function getMoves(type, location) {
-
-    switch (piece[1]) {
+    switch (type) {
         case 'rook':
+            return getRookMoves(location);
         case 'pawn':
+            return getPawnMoves(location);
         case 'night':
+            return getKnightMoves(location);
         case 'bishop':
+            return getBishopMoves(location);
         case 'queen':
+            return getQueenMoves(location);
         case 'king':
+            return getKingMoves(location);
         default:
             return [];
     }
+}
+
+function getRookMoves(location) {
+    return [];
+}
+
+function getPawnMoves(location) {
+    return [];
+}
+
+function getKnightMoves(location) {
+    return [];
+}
+
+function getBishopMoves(location) {
+    return [];
+}
+
+function getQueenMoves(location) {
+    return [];
+}
+
+function getKingMoves(location) {
+    return [];
 }
 
 export function isKingCheck(board, color) {
