@@ -299,6 +299,20 @@ function isKingMove(from, to, board, color) {
     return false;
 }
 
+function getMoves(type, location) {
+
+    switch (piece[1]) {
+        case 'rook':
+        case 'pawn':
+        case 'night':
+        case 'bishop':
+        case 'queen':
+        case 'king':
+        default:
+            return [];
+    }
+}
+
 export function isKingCheck(board, color) {
     let pieces = generatePieceDict(board);
     if (color === 'white') {
@@ -320,15 +334,18 @@ export function isKingCheck(board, color) {
     return false;
 }
 
+
 export function isCheckmate(board, color) {
     let pieces = generatePieceDict(board);
     let oppositeColor = color === 'white' ? 'black' : 'white';
     for (let k of Object.keys(pieces[color])) {
         for (let p of pieces[color][k]) {
-            if (validateMove(board[p[0]][p[1]], p, pieces[oppositeColor]['king'][0], board, false)) {
-                return true;
+            for (let m of getMoves(k, p)) {
+                if (validateMove(board[p[0]][p[1]], p, pieces[oppositeColor]['king'][0], board, false)) {
+                    return false;
+                }
             }
         }
     }
-    return false;
+    return true;
 }

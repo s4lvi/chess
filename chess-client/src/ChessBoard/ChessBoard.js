@@ -22,7 +22,8 @@ class ChessBoard extends React.Component {
             moves: [],
             dead: props.dead,
             connected: false,
-            notify: props.notify
+            notify: props.notify,
+            over: false
         }
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
@@ -32,16 +33,18 @@ class ChessBoard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,
             dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor,notify:nextProps.notify}, () => {
-                let isKingCheck = isKingCheck(nextProps.board, this.state.player);
-                let notify = isKingCheck ? this.state.player + "'s king is in check" : null;
+                let isCheck = isKingCheck(nextProps.board, this.state.player);
+                let notify = isCheck ? this.state.player + "'s king is in check" : null;
                 console.log(notify);
-                if (isKingCheck) {
-                    let isCheckmate = isCheckmate(nextProps.board, this.state.player);
-                    if (isCheckmate) {
+                let overUpdate = this.state.over;
+                if (isCheck) {
+                    let checkmate = isCheckmate(nextProps.board, this.state.player);
+                    if (checkmate) {
                         notify = "Checkmate! " + (this.state.player === 'white' ? 'Black' : 'White') + " wins.";
+                        overUpdate = true;
                     }
                 }
-                this.setState({notify:notify});
+                this.setState({notify:notify, over:overUpdate});
             })
     }
                        
@@ -59,29 +62,31 @@ class ChessBoard extends React.Component {
     }
 
     click(position) {
-        if (this.state.firstClick !== null) {
-            let newBoard = this.state.board;
-            let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
-            let piece = [pieceRef[0],pieceRef[1],false,pieceRef[3]]
-            this.setState({board: newBoard}, () => {
-                newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = piece;
-                this.setState({secondClick: position, board: newBoard}, () => {
-                    this.pieceMove(this.state.firstClick, this.state.secondClick);
+        if (!this.state.over) {
+            if (this.state.firstClick !== null) {
+                let newBoard = this.state.board;
+                let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
+                let piece = [pieceRef[0],pieceRef[1],false,pieceRef[3]]
+                this.setState({board: newBoard}, () => {
+                    newBoard[this.state.firstClick[0]][this.state.firstClick[1]] = piece;
+                    this.setState({secondClick: position, board: newBoard}, () => {
+                        this.pieceMove(this.state.firstClick, this.state.secondClick);
+                    });
                 });
-            });
-
-        } else {
-            let newBoard = this.state.board;
-            let pieceRef = newBoard[position[0]][position[1]];
-            if (pieceRef !== null && pieceRef[0] === this.state.player) {
-                pieceRef[2] = true
-                let piece = pieceRef
-                newBoard[position[0]][position[1]] = null;
-                this.setState({firstClick: position, board: newBoard}, () => {
-                    newBoard[position[0]][position[1]] = piece;
-                    this.setState({board: newBoard});
-                });
-            } 
+    
+            } else {
+                let newBoard = this.state.board;
+                let pieceRef = newBoard[position[0]][position[1]];
+                if (pieceRef !== null && pieceRef[0] === this.state.player) {
+                    pieceRef[2] = true
+                    let piece = pieceRef
+                    newBoard[position[0]][position[1]] = null;
+                    this.setState({firstClick: position, board: newBoard}, () => {
+                        newBoard[position[0]][position[1]] = piece;
+                        this.setState({board: newBoard});
+                    });
+                } 
+            }
         }
     }
 
