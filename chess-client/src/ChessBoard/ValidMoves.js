@@ -219,6 +219,7 @@ function isKnightMove(from, to, board, color) {
     }
     return false;
 }
+
 function isBishopMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
     if (dir[0] !== 0 && dir[1] !== 0){
@@ -332,11 +333,11 @@ function getKnightMoves(location, board, color) {
 
 function getBishopMoves(location, board, color) {
     var moves = [];
-    for (let d1 = -1; i < 2; i + 2) {
-        for (let d2 = -1; i < 2; i + 2) {
+    for (let d1 = -1; d1 < 2; d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 + 2) {
             for (let i = 1; i < 9; i++) {
-                var col = getCol(from[0],d1,i);
-                var row = getRow(from[1],d2,i);
+                var col = getCol(location[0],d1,i);
+                var row = getRow(location[1],d2,i);
                 if (isMove(location, [col, row], board, color)) {
                     if (isEmptyOrEnemy([col, row], board, color)) {
                         moves.push([col, row]);
@@ -345,7 +346,7 @@ function getBishopMoves(location, board, color) {
             }
         }
     }
-    return [];
+    return moves;
 }
 
 function getQueenMoves(location, board, color) {
@@ -380,12 +381,11 @@ export function isKingCheck(board, color) {
 
 export function isCheckmate(board, color) {
     let pieces = generatePieceDict(board);
-    let oppositeColor = color === 'white' ? 'black' : 'white';
     for (let k of Object.keys(pieces[color])) {
-        for (let p of pieces[color][k]) {
-            for (let m of getMoves(k, p)) {
-                if (validateMove(board[p[0]][p[1]], p, pieces[oppositeColor]['king'][0], board, false)) {
-                    return false;
+        for (let p of pieces[color][k]) { // for every piece
+            for (let m of getMoves(k, p)) { // try every possible move
+                if (validateMove(board[p[0]][p[1]], p, m, board, false)) {
+                    return false; // if the move is valid, it means that move has removed the check and the game is not over
                 }
             }
         }
