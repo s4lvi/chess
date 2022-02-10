@@ -299,46 +299,60 @@ function isKingMove(from, to, board, color) {
     return false;
 }
 
-function getMoves(type, location) {
+function getMoves(type, location, board, color) {
     switch (type) {
         case 'rook':
-            return getRookMoves(location);
+            return getRookMoves(location, board, color);
         case 'pawn':
-            return getPawnMoves(location);
+            return getPawnMoves(location, board, color);
         case 'night':
-            return getKnightMoves(location);
+            return getKnightMoves(location, board, color);
         case 'bishop':
-            return getBishopMoves(location);
+            return getBishopMoves(location, board, color);
         case 'queen':
-            return getQueenMoves(location);
+            return getQueenMoves(location, board, color);
         case 'king':
-            return getKingMoves(location);
+            return getKingMoves(location, board, color);
         default:
             return [];
     }
 }
 
-function getRookMoves(location) {
+function getRookMoves(location, board, color) {
     return [];
 }
 
-function getPawnMoves(location) {
+function getPawnMoves(location, board, color) {
     return [];
 }
 
-function getKnightMoves(location) {
+function getKnightMoves(location, board, color) {
     return [];
 }
 
-function getBishopMoves(location) {
+function getBishopMoves(location, board, color) {
+    var moves = [];
+    for (let d1 = -1; i < 2; i + 2) {
+        for (let d2 = -1; i < 2; i + 2) {
+            for (let i = 1; i < 9; i++) {
+                var col = getCol(from[0],d1,i);
+                var row = getRow(from[1],d2,i);
+                if (isMove(location, [col, row], board, color)) {
+                    if (isEmptyOrEnemy([col, row], board, color)) {
+                        moves.push([col, row]);
+                    }
+                }
+            }
+        }
+    }
     return [];
 }
 
-function getQueenMoves(location) {
+function getQueenMoves(location, board, color) {
     return [];
 }
 
-function getKingMoves(location) {
+function getKingMoves(location, board, color) {
     return [];
 }
 
