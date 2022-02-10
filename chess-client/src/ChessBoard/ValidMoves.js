@@ -320,7 +320,34 @@ function getMoves(type, location, board, color) {
 }
 
 function getRookMoves(location, board, color) {
-    return [];
+    var moves = [];
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 9; i++) {
+            var col = getCol(location[0],d,i);
+            var row = getRow(location[1],0,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 9; i++) {
+            var col = getCol(location[0],0,i);
+            var row = getRow(location[1],d,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    return moves;
 }
 
 function getPawnMoves(location, board, color) {
@@ -341,6 +368,8 @@ function getBishopMoves(location, board, color) {
                 if (isMove(location, [col, row], board, color)) {
                     if (isEmptyOrEnemy([col, row], board, color)) {
                         moves.push([col, row]);
+                    } else {
+                        continue;
                     }
                 }
             }
