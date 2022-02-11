@@ -325,7 +325,7 @@ function getRookMoves(location, board, color) {
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = getCol(location[0],d,i);
-            var row = getRow(location[1],0,i);
+            var row = location[1];
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
                     moves.push([col, row]);
@@ -337,7 +337,7 @@ function getRookMoves(location, board, color) {
     }
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 9; i++) {
-            var col = getCol(location[0],0,i);
+            var col = location[0];
             var row = getRow(location[1],d,i);
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
@@ -353,7 +353,7 @@ function getRookMoves(location, board, color) {
 
 function getPawnMoves(location, board, color) {
     var moves = [];
-    var row = getRow(location[1],0,1);
+    var row = getRow(location[1],1,1);
     if (isEmptyOrEnemy([location[0], row], board, color)) { // move forward
         moves.push([col, row]);
     }
@@ -412,7 +412,7 @@ function getQueenMoves(location, board, color) {
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = getCol(location[0],d,i);
-            var row = getRow(location[1],0,i);
+            var row = location[1];
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
                     moves.push([col, row]);
@@ -424,7 +424,7 @@ function getQueenMoves(location, board, color) {
     }
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 9; i++) {
-            var col = getCol(location[0],0,i);
+            var col = location[0];
             var row = getRow(location[1],d,i);
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
@@ -458,7 +458,7 @@ function getKingMoves(location, board, color) {
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 2; i++) {
             var col = getCol(location[0],d,i);
-            var row = getRow(location[1],0,i);
+            var row = location[1];
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
                     moves.push([col, row]);
@@ -470,7 +470,7 @@ function getKingMoves(location, board, color) {
     }
     for (let d = -1; d < 2; d + 2) {
         for (let i = 1; i < 2; i++) {
-            var col = getCol(location[0],0,i);
+            var col = location[0];
             var row = getRow(location[1],d,i);
             if (isMove(location, [col, row], board, color)) {
                 if (isEmptyOrEnemy([col, row], board, color)) {
