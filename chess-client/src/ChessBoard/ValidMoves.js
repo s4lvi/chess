@@ -243,6 +243,7 @@ function isQueenMove(from, to, board, color) {
     }
     return false;
 }
+
 function isKingMove(from, to, board, color) {
     let dir = dirFromTo(from, to);
 
@@ -351,7 +352,20 @@ function getRookMoves(location, board, color) {
 }
 
 function getPawnMoves(location, board, color) {
-    return [];
+    var moves = [];
+    var row = getRow(location[1],0,1);
+    if (isEmptyOrEnemy([location[0], row], board, color)) { // move forward
+        moves.push([col, row]);
+    }
+    var col = getCol(location[0],-1,1);
+    if (isEmptyOrEnemy([col, row], board, color)) { // capture left
+        moves.push([col, row]);
+    }
+    col = getCol(location[0],1,1);
+    if (isEmptyOrEnemy([col, row], board, color)) { // capture right
+        moves.push([col, row]);
+    }
+    return moves;
 }
 
 function getKnightMoves(location, board, color) {
@@ -379,11 +393,95 @@ function getBishopMoves(location, board, color) {
 }
 
 function getQueenMoves(location, board, color) {
-    return [];
+    var moves = [];
+    for (let d1 = -1; d1 < 2; d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 + 2) {
+            for (let i = 1; i < 9; i++) {
+                var col = getCol(location[0],d1,i);
+                var row = getRow(location[1],d2,i);
+                if (isMove(location, [col, row], board, color)) {
+                    if (isEmptyOrEnemy([col, row], board, color)) {
+                        moves.push([col, row]);
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 9; i++) {
+            var col = getCol(location[0],d,i);
+            var row = getRow(location[1],0,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 9; i++) {
+            var col = getCol(location[0],0,i);
+            var row = getRow(location[1],d,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    return moves;
 }
 
 function getKingMoves(location, board, color) {
-    return [];
+    var moves = []
+    for (let d1 = -1; d1 < 2; d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 + 2) {
+            for (let i = 1; i < 2; i++) {
+                var col = getCol(location[0],d1,i);
+                var row = getRow(location[1],d2,i);
+                if (isMove(location, [col, row], board, color)) {
+                    if (isEmptyOrEnemy([col, row], board, color)) {
+                        moves.push([col, row]);
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 2; i++) {
+            var col = getCol(location[0],d,i);
+            var row = getRow(location[1],0,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    for (let d = -1; d < 2; d + 2) {
+        for (let i = 1; i < 2; i++) {
+            var col = getCol(location[0],0,i);
+            var row = getRow(location[1],d,i);
+            if (isMove(location, [col, row], board, color)) {
+                if (isEmptyOrEnemy([col, row], board, color)) {
+                    moves.push([col, row]);
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+    return moves;
 }
 
 export function isKingCheck(board, color) {
