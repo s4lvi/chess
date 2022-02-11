@@ -92,6 +92,7 @@ function getCol(start, dir, count) {
         return false
     }
 }
+
 function getRow(start, dir, count) {
     let alpha = ['1', '2', '3', '4', '5', '6', '7', '8'];
     let startIndex = alpha.indexOf(start);
@@ -113,13 +114,16 @@ function isMove(move, to, board, color) {
     // returns true if the destination is the same as 'to'
     return (equal(move,move) && equal(move,to))
 }
+
 function isEmptyOrEnemy(to, board, color) {
     // returns true if the space is empty or an enemy
     return (board[to[0]][to[1]] === null || board[to[0]][to[1]][0] !== color)
 }
+
 function isEmpty(to, board) {
     return (equal(to, to) && board[to[0]][to[1]] === null)
 }
+
 function dirFromTo(from, to) {
     return [to[0] === from[0] ? 0 : to[0] > from[0] ? 1 : -1, to[1] === from[1] ? 0 : to[1] > from[1] ? 1 : -1]
 }
@@ -136,6 +140,7 @@ function isRookMove(from, to, board, color) {
     }
     return false;
 }
+
 function isPawnMove(from, to, board, color) {
     let dir = color === 'white' ? 1 : -1;
     // check if 1 forward movement, and no piece is in the square
@@ -174,6 +179,7 @@ function isPawnMove(from, to, board, color) {
     
     return false;
 }
+
 function isKnightMove(from, to, board, color) {
     let move = []
     let piece = null
@@ -369,7 +375,42 @@ function getPawnMoves(location, board, color) {
 }
 
 function getKnightMoves(location, board, color) {
-    return [];
+    let move = [];
+    let moves = [];
+    let piece = null;
+    move = [getCol(location[0],1,1),getRow(location[1],1,2)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],1,1),getRow(location[1],-1,2)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],-1,1),getRow(location[1],1,2)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],-1,1),getRow(location[1],-1,2)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],1,2),getRow(location[1],1,1)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],1,2),getRow(location[1],-1,1)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],-1,2),getRow(location[1],1,1)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    move = [getCol(location[0],-1,2),getRow(location[1],-1,1)]
+    if (equal(move,move)) {
+        if (isEmptyOrEnemy(move, board, color)) moves.push(move);
+    }
+    return moves;
 }
 
 function getBishopMoves(location, board, color) {
