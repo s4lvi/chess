@@ -328,7 +328,7 @@ function getMoves(type, location, board, color) {
 
 function getRookMoves(location, board, color) {
     var moves = [];
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = getCol(location[0],d,i);
             var row = location[1];
@@ -341,7 +341,7 @@ function getRookMoves(location, board, color) {
             }
         }
     }
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = location[0];
             var row = getRow(location[1],d,i);
@@ -360,16 +360,18 @@ function getRookMoves(location, board, color) {
 function getPawnMoves(location, board, color) {
     var moves = [];
     var row = getRow(location[1],1,1);
-    if (isEmptyOrEnemy([location[0], row], board, color)) { // move forward
-        moves.push([col, row]);
-    }
-    var col = getCol(location[0],-1,1);
-    if (isEmptyOrEnemy([col, row], board, color)) { // capture left
-        moves.push([col, row]);
-    }
-    col = getCol(location[0],1,1);
-    if (isEmptyOrEnemy([col, row], board, color)) { // capture right
-        moves.push([col, row]);
+    if (row) {
+        if (isEmptyOrEnemy([location[0], row], board, color)) { // move forward
+            moves.push([col, row]);
+        }
+        var col = getCol(location[0],-1,1);
+        if (col && isEmptyOrEnemy([col, row], board, color)) { // capture left
+            moves.push([col, row]);
+        }
+        col = getCol(location[0],1,1);
+        if (col && ([col, row], board, color)) { // capture right
+            moves.push([col, row]);
+        }
     }
     return moves;
 }
@@ -415,8 +417,8 @@ function getKnightMoves(location, board, color) {
 
 function getBishopMoves(location, board, color) {
     var moves = [];
-    for (let d1 = -1; d1 < 2; d1 + 2) {
-        for (let d2 = -1; d2 < 2; d2 + 2) {
+    for (let d1 = -1; d1 < 2; d1 = d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 = d2 + 2) {
             for (let i = 1; i < 9; i++) {
                 var col = getCol(location[0],d1,i);
                 var row = getRow(location[1],d2,i);
@@ -435,8 +437,8 @@ function getBishopMoves(location, board, color) {
 
 function getQueenMoves(location, board, color) {
     var moves = [];
-    for (let d1 = -1; d1 < 2; d1 + 2) {
-        for (let d2 = -1; d2 < 2; d2 + 2) {
+    for (let d1 = -1; d1 < 2; d1 = d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 = d2 + 2) {
             for (let i = 1; i < 9; i++) {
                 var col = getCol(location[0],d1,i);
                 var row = getRow(location[1],d2,i);
@@ -450,7 +452,7 @@ function getQueenMoves(location, board, color) {
             }
         }
     }
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = getCol(location[0],d,i);
             var row = location[1];
@@ -463,7 +465,7 @@ function getQueenMoves(location, board, color) {
             }
         }
     }
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 9; i++) {
             var col = location[0];
             var row = getRow(location[1],d,i);
@@ -481,8 +483,8 @@ function getQueenMoves(location, board, color) {
 
 function getKingMoves(location, board, color) {
     var moves = []
-    for (let d1 = -1; d1 < 2; d1 + 2) {
-        for (let d2 = -1; d2 < 2; d2 + 2) {
+    for (let d1 = -1; d1 < 2; d1 = d1 + 2) {
+        for (let d2 = -1; d2 < 2; d2 = d2 + 2) {
             for (let i = 1; i < 2; i++) {
                 var col = getCol(location[0],d1,i);
                 var row = getRow(location[1],d2,i);
@@ -496,7 +498,7 @@ function getKingMoves(location, board, color) {
             }
         }
     }
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 2; i++) {
             var col = getCol(location[0],d,i);
             var row = location[1];
@@ -509,7 +511,7 @@ function getKingMoves(location, board, color) {
             }
         }
     }
-    for (let d = -1; d < 2; d + 2) {
+    for (let d = -1; d < 2; d = d + 2) {
         for (let i = 1; i < 2; i++) {
             var col = location[0];
             var row = getRow(location[1],d,i);
@@ -550,13 +552,17 @@ export function isKingCheck(board, color) {
 export function isCheckmate(board, color) {
     let pieces = generatePieceDict(board);
     for (let k of Object.keys(pieces[color])) {
+        console.log("checking ", color, k)
         for (let p of pieces[color][k]) { // for every piece
-            for (let m of getMoves(k, p)) { // try every possible move
+            for (let m of getMoves(k, p, board, color)) { // try every possible move
                 if (validateMove(board[p[0]][p[1]], p, m, board, false)) {
+                    console.log("found valid move")
                     return false; // if the move is valid, it means that move has removed the check and the game is not over
                 }
             }
         }
+        console.log("no valid moves for ", color, k)
     }
+    console.log("no valid moves. checkmate!")
     return true;
 }

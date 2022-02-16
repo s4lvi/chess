@@ -29,7 +29,9 @@ class Game extends React.Component {
             dead: null,
             turn: null,
             player: null,
-            notify: null
+            notify: null,
+            gameover: false,
+            winner: null
         }
 
         this.switchView = this.switchView.bind(this);
@@ -105,7 +107,8 @@ class Game extends React.Component {
             let playerColor = playerIndex === 1 ? "black" : "white"
             let boardParsed = JSON.parse(data["board"])
             this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],
-                board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor,notify:data["notify"]});
+                board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor,notify:data["notify"],
+                gameover:data["gameover"],winner:data["winner"]});
         }
         if (data["login"] !== undefined && data["login"] !== null) {
             if (data["login"] === true) {

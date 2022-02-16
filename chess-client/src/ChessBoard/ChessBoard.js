@@ -23,7 +23,8 @@ class ChessBoard extends React.Component {
             dead: props.dead,
             connected: false,
             notify: props.notify,
-            over: false
+            gameover: false,
+            winner: null
         }
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
@@ -37,18 +38,21 @@ class ChessBoard extends React.Component {
                 let notify = isCheck ? this.state.player + "'s king is in check" : null;
                 console.log(notify);
                 let overUpdate = this.state.over;
+                let winnerUpdate = null;
                 if (isCheck) {
                     let checkmate = isCheckmate(nextProps.board, this.state.player);
                     if (checkmate) {
                         notify = "Checkmate! " + (this.state.player === 'white' ? 'Black' : 'White') + " wins.";
                         overUpdate = true;
+                        winnerUpdate = this.state.player === 'white' ? 'black' : 'white';
+                        this.sendGameOver();
                     }
                 }
-                this.setState({notify:notify, over:overUpdate});
+                this.setState({notify:notify, over:overUpdate, winner:winnerUpdate});
             })
     }
                        
-    sendMove(board) {
+    sendMove() {
         let message = {
             "action": "sendMove",
             "message": {
@@ -56,7 +60,20 @@ class ChessBoard extends React.Component {
                 "board":JSON.stringify(this.state.board),
                 "player":this.state.playerId,
                 "dead":this.state.dead,
-                "notify":this.state.notify}
+                "notify":this.state.notify,
+                "gameover":this.state.gameover,
+                "winner":this.state.winner}
+        }
+        this.props.sendMove(message)
+    }
+
+    sendGameOver() {
+        let message = {
+            "action": "gameOver",
+            "message": {
+                "matchId":this.state.matchId, 
+                "gameover":this.state.gameover,
+                "winner":this.state.winner}
         }
         this.props.sendMove(message)
     }
@@ -154,7 +171,7 @@ class ChessBoard extends React.Component {
                     let moves = this.state.moves;
                     moves.push(move);
                     this.setState({board: newBoard, 
-                                    moves: moves}, () => this.sendMove(newBoard))
+                                    moves: moves}, () => this.sendMove())
                 });
             }
             this.cancelClicks();
