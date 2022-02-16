@@ -9,12 +9,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 92vh;
   font-size: 80%;
+  margin: 4vh;
 }
 
 .TopBar {
- position: absolute;
+  position: absolute;
  width: 100vw;
  height: 32px;
  top: 0;
@@ -27,13 +28,13 @@
 @media only screen and (min-width: 1200px) {
   .chessBoard {
     border: 8px solid #25190e;
-    width:80vh;
-    height:80vh;
+    width:72vh;
+    height:72vh;
     background-color: #77604a;
   }
   
   .chessRow {
-    width:80vh;
+    width:72vh;
   }
   
   .infoRow {
@@ -42,27 +43,27 @@
   }
   
   .squareBlack {
-    height: 10vh;
-    width: 10vh;
-    max-height: 10vh;
-    max-width: 10vh;
-    min-height: 10vh;
-    min-width: 10vh;
+    height: 9vh;
+    width: 9vh;
+    max-height: 9vh;
+    max-width: 9vh;
+    min-height: 9vh;
+    min-width: 9vh;
     background-color:#423121;
   }
   
   .squareWhite {
-    height: 10vh;
-    width: 10vh; 
-    max-height: 10vh;
-    max-width: 10vh;
-    min-height: 10vh;
-    min-width: 10vh;
+    height: 9vh;
+    width: 9vh; 
+    max-height: 9vh;
+    max-width: 9vh;
+    min-height: 9vh;
+    min-width: 9vh;
     background-color:#f8f1e3;
   }
   
   .chessBoard img {
-    width: 7vh;
+    width: 6vh;
     filter: drop-shadow(2px 2px 2px rgb(0, 0, 0));
   }
   
@@ -74,7 +75,7 @@
   }
   
   .chessPieceActive img {
-    width: 9.5vh;
+    width: 9vh;
   }
   
   .rotater {
@@ -88,6 +89,8 @@
   border: 8px solid #25190e;
   width:80vw;
   height:80vw;
+  max-height: 768px;
+  max-width: 768px;
   background-color: #77604a;
 }
 
@@ -103,8 +106,8 @@
 .squareBlack {
   height: 10vw;
   width: 10vw;
-  max-height: 10vw;
-  max-width: 10vw;
+  max-height: 96px;
+  max-width: 96px;
   min-height: 10vw;
   min-width: 10vw;
   background-color:#423121;
@@ -113,8 +116,8 @@
 .squareWhite {
   height: 10vw;
   width: 10vw; 
-  max-height: 10vw;
-  max-width: 10vw;
+  max-height: 96px;
+  max-width: 96px;
   min-height: 10vw;
   min-width: 10vw;
   background-color:#f8f1e3;
@@ -122,6 +125,7 @@
 
 .chessBoard img {
   width: 7vw;
+  max-width: 78px;
   filter: drop-shadow(2px 2px 2px rgb(0, 0, 0));
 }
 
@@ -134,6 +138,7 @@
 
 .chessPieceActive img {
   width: 9.5vw;
+  max-width:88px
 }
 
 .rotater {
