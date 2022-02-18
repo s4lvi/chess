@@ -41,6 +41,7 @@ class Game extends React.Component {
         this.join = this.join.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
         this.sendMove = this.sendMove.bind(this);
+        this.endGame = this.endGame.bind(this);
         this.client = null;
     }
 
@@ -102,12 +103,23 @@ class Game extends React.Component {
             this.setState({matchId:data.newMatchId, currentView:"waiting"});
         }
         if (data["players"]) {
+            var notify = data["notify"];
+            var view = "play"
+            if (data["gameover"] === true) {
+                view = this.state.currentView;
+                if (data["winner"] === null) {
+                    notify = "Game over: player forfeit."
+                } else {
+                    notify = "Game over: player " + data["winner"] + " wins!"
+                }
+            } 
+            console.log(notify)
             let playerIndex = this.state.username === data["players"][0] ? 0 : 1;
             let opponentIndex = playerIndex === 1 ? 0 : 1;
             let playerColor = playerIndex === 1 ? "black" : "white"
             let boardParsed = JSON.parse(data["board"])
-            this.setState({currentView:"play",matchId:data["matchId"],opponentId:data["players"][opponentIndex],
-                board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor,notify:data["notify"],
+            this.setState({currentView:view,matchId:data["matchId"],opponentId:data["players"][opponentIndex],
+                board:boardParsed,dead:data["dead"],turn:data["turn"],playerColor:playerColor,notify:notify,
                 gameover:data["gameover"],winner:data["winner"]});
         }
         if (data["login"] !== undefined && data["login"] !== null) {
@@ -123,6 +135,10 @@ class Game extends React.Component {
         this.client.client.send(JSON.stringify(move))
     }
 
+    endGame() {
+        this.setState({currentView:"browse"});
+    }
+
     render() {
         return(
             <div className="GameContainer">
@@ -135,8 +151,8 @@ class Game extends React.Component {
                     <h2>Waiting for player to join...</h2>
                     <img className="rotater" src={rookImg} alt="pawn" />
                 </div>}
-                { this.state.currentView === "play" && <ChessBoard sendMove={this.sendMove} playerId={this.state.username} board={this.state.board} notify={this.state.notify}
-                matchId={this.state.matchId} opponentId={this.state.opponentId} turn={this.state.turn} dead={this.state.dead} playerColor={this.state.playerColor} /> }
+                { this.state.currentView === "play" && <ChessBoard sendMove={this.sendMove} endGame={this.endGame} playerId={this.state.username} board={this.state.board} notify={this.state.notify}
+                matchId={this.state.matchId} opponentId={this.state.opponentId} turn={this.state.turn} dead={this.state.dead} playerColor={this.state.playerColor} gameover={this.state.gameover} /> }
             </div>
         )
     }

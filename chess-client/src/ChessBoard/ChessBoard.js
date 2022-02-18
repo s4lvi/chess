@@ -4,6 +4,7 @@ import {validateMove, isKingCheck, isCheckmate} from "./ValidMoves";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SocketClient from "../SocketClient/SocketClient";
+import { Button } from "@mui/material";
 
 class ChessBoard extends React.Component {
     constructor(props) {
@@ -23,21 +24,26 @@ class ChessBoard extends React.Component {
             dead: props.dead,
             connected: false,
             notify: props.notify,
-            gameover: false,
+            gameover: props.gameover,
             winner: null
         }
         this.cancelClicks = this.cancelClicks.bind(this);
         this.click = this.click.bind(this);
         this.pieceMove = this.pieceMove.bind(this);
+        this.sendGameOver = this.sendGameOver.bind(this);
+        this.back = this.back.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({matchId:nextProps.matchId,opponentId:nextProps.opponentId,board:nextProps.board,
-            dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor,notify:nextProps.notify}, () => {
+            dead:nextProps.dead,turn:nextProps.turn,player:nextProps.playerColor,notify:nextProps.notify,
+            gameover:nextProps.gameover}, () => {
                 let isCheck = isKingCheck(nextProps.board, this.state.player);
-                let notify = isCheck ? this.state.player + "'s king is in check" : null;
-                console.log(notify);
-                let overUpdate = this.state.over;
+                let notify = nextProps.notify;
+                if (isCheck) {
+                    notify = this.state.player + "'s king is in check";
+                }
+                let overUpdate = this.state.gameover;
                 let winnerUpdate = null;
                 if (isCheck) {
                     let checkmate = isCheckmate(nextProps.board, this.state.player);
@@ -48,7 +54,7 @@ class ChessBoard extends React.Component {
                         this.sendGameOver();
                     }
                 }
-                this.setState({notify:notify, over:overUpdate, winner:winnerUpdate});
+                this.setState({notify:notify, gameover:overUpdate, winner:winnerUpdate});
             })
     }
                        
@@ -75,11 +81,17 @@ class ChessBoard extends React.Component {
                 "gameover":this.state.gameover,
                 "winner":this.state.winner}
         }
-        this.props.sendMove(message)
+        this.props.sendMove(message);
+    }
+
+    back() {
+        this.sendGameOver();
+        this.props.endGame();
     }
 
     click(position) {
-        if (!this.state.over) {
+        console.log(this.state.gameover)
+        if (!this.state.gameover) {
             if (this.state.firstClick !== null) {
                 let newBoard = this.state.board;
                 let pieceRef = newBoard[this.state.firstClick[0]][this.state.firstClick[1]];
@@ -304,6 +316,8 @@ class ChessBoard extends React.Component {
                 </tr>
                 </tbody>
             </table>
+            <Button sx={{backgroundColor: "#423121", marginBottom:"2px", marginTop:"12px", marginRight:"12px"}} variant="contained" onClick={this.sendGameOver}>Forfeit</Button>
+            <Button sx={{backgroundColor: "#423121", marginBottom:"2px", marginTop:"12px"}} variant="contained" onClick={this.back}>Back</Button>
             </CardContent>
         </Card>
         )

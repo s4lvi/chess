@@ -147,6 +147,10 @@
 }
 }
 
+.squareHighlight {
+  background-color: #ff86ab;
+}
+
 .wiggle {
   animation: wiggle 0.5s infinite 1 alternate;
 }
